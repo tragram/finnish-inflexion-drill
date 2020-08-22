@@ -84,7 +84,7 @@ class WordFlag extends React.Component {
     // 'ill-pl', 'ade-pl', 'abl-pl', 'all-pl', 'ess-pl', 'tra-pl', 'abe-pl', 
     // 'ins-pl', 'cmt']
     const wordIndex = Math.floor(Math.random() * keys.length);
-    const pluralityIndex = 1;Math.floor(Math.random() * 2); //only singular now
+    const pluralityIndex = 1;Math.floor(Math.random() * 2);
     let caseIndex;
     if (pluralityIndex === 0) {//singular
       // -4 because nominative sg is trivial and accusative officially does not exsist
@@ -118,8 +118,8 @@ class WordFlag extends React.Component {
   }
 
   checkInput(user_input) {
-    //TODO: for each of the possible correct forms...
-    if (user_input == this.state.currentAnswer) {
+    console.log(this.state.currentAnswer)
+    if (this.state.currentAnswer.includes(user_input)) {
       console.log("Correct");
       const [word, ans, form, tran, kotus] = this.generateNewWord(this.nouns);
       this.setState({
