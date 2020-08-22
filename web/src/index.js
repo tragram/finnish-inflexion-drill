@@ -40,14 +40,14 @@ class UserTextInput extends React.Component {
     }
   }
   render() {
+    //{this.props.errorState?"flag-uk.svg":""}
     return (
       <div className="word-input-flex">
-      <input type="text" className="word-input"
+      <input type="text" className={"word-input " + this.props.background_cls}
         placeholder="type here the word in the form specified" onKeyPress={this.handleKeyPress}
         onChange={(evt) => { this.setState({ value: evt.target.value }); }}
-        ref={this.props.reference} autoFocus />
+        ref={this.props.reference} autoFocus/>
         </div>
-      // + (this.props.errorState?"has-error":"")}
     )
   }
 }
@@ -64,10 +64,10 @@ class WordFlag extends React.Component {
       currentTranslation: tran,
       currentKotusType: kotus,
       currentFormName: form,
-      wrongInput: false,
+      textInputBG: 'black-bg',
     };
-
     this.checkInput = this.checkInput.bind(this);
+    this.flicker = this.flicker.bind(this);
   }
 
   generateNewWord(keys) {
@@ -78,13 +78,16 @@ class WordFlag extends React.Component {
     console.log(forms[formIndex]);
     console.log(data[word].forms[formIndex]);
     return [word, data[word].forms[formIndex], forms[formIndex], data[word].tran, data[word].kotus];
+  }
 
-    this.setState({
-      currentWord: word,
-      currentAnswer: data[word].forms[formIndex],
-      currentTranslation: data[word].tran
-    });
-    console.log(this.state);
+  flicker(color){
+    this.setState({ textInputBG: color },
+      ()=>{
+        setTimeout(()=>{
+          this.setState({ textInputBG: 'black-bg' })
+        },100);
+        
+      });
   }
 
   checkInput(user_input) {
@@ -98,11 +101,11 @@ class WordFlag extends React.Component {
         currentTranslation: tran,
         currentKotusType: kotus,
         currentFormName: form,
-        wrongInput: false,
       });
       this.textRef.current.value = '';
+      this.flicker("green-bg")
     } else {
-      this.setState({ wrongInput: true });
+      this.flicker("red-bg")
     }
   }
 
@@ -128,7 +131,7 @@ class WordFlag extends React.Component {
 
         </div>
         <div className="card-flex">
-          <UserTextInput enterCallback={this.checkInput} reference={this.textRef} errorState={this.state.wrongInput} />
+          <UserTextInput enterCallback={this.checkInput} reference={this.textRef} background_cls={this.state.textInputBG} />
         </div>
       </div>
 

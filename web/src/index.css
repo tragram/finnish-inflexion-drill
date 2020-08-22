@@ -148,11 +148,10 @@ code {
   color: black;
   /* min-width: 1000px; */
   /* box-sizing: border-box; */
-  background-color: rgba(0,0,0,0.25);
+  
   border: none;
   border-radius: var(--border-rad);
   /* margin: 10px auto; */
-  transition:background-color 0.5s ease;
   font-size:30pt;
   /* margin: 10px auto; */
   /* margin-left: 100; */
@@ -160,12 +159,38 @@ code {
   /* padding:15px 10px; */
   /* font-size: 30px; */
   font-family: Comfortaa;
-  /* box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12); */
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12);
   width:100%;
   padding: 20px;
+  /* background-image: url("../public/flag-uk.svg");
+  background-size: 50px;
+  background-repeat: no-repeat;
+  background-position: 99% 100%; */
+}
+
+.black-bg{
+  background-color: rgba(0,0,0,0.25);
+  transition:background-color 3s cubic-bezier(.18,.89,.32,1.28);
+}
+
+.red-bg{
+  background-color: #C67B87;
+}
+
+.green-bg{
+  background-color: #8BC98B;
 }
 
 /* span{overflow:hidden;} */
+
+.wrongIndicator{
+  width:50px;
+  margin:0 0 0 -50px;
+  float: right;
+  /* display:inline-block; */
+  /* position: absolute;
+  z-index:1; */
+}
 
 ::placeholder{
   overflow: visible;
