@@ -1,0 +1,176 @@
+:root{
+  --finnish-blue: #002f6c;
+  --finnish-red: #C8102E;
+  --finnish-yellow:#FFC72C;
+  --border-rad:25px;
+}
+
+body {
+  background: #fafafa;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.card-flex {
+  /* We first create a flex layout context */
+  display: flex;
+  
+  /* Then we define the flow direction 
+     and if we allow the items to wrap 
+   * Remember this is the same as:
+   * flex-direction: row;
+   * flex-wrap: wrap;
+   */
+  flex-flow: row wrap;
+  
+  /* Then we define how is distributed the remaining space */
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  margin: 10px;
+  list-style: none;
+  /* background:var(--finnish-blue); */
+}
+
+.l-stretch{
+  flex: 2 2 200px;
+  max-width: 600px;
+  min-width: 600px;
+}
+
+.r-stretch{
+  flex: 1 1 100px;
+  max-width: 600px;
+  min-width: 600px;
+}
+
+.word-card{
+  /* border-radius:10px; */
+  font-family: Comfortaa;
+  margin-top: 10px;
+  /* margin-bottom: 10px; */
+  max-width: 600px;
+  min-width: 100px;
+}
+
+.rcard{
+  font-size: 1.5em;
+  font-weight:400;
+  height: 100px;
+  padding: 0;
+  margin-left: 5px;
+  border-radius: 0 var(--border-rad) var(--border-rad) 0;
+}
+
+.lcard{
+  font-size: 6em;
+  font-weight: 700;
+  height: 320px;
+  margin-left: -5px;
+  margin-right: 5px;
+  border-radius: var(--border-rad) 0 0 var(--border-rad);
+}
+
+.card-text{
+  text-align: center;
+  overflow: hidden;
+}
+
+.rtext{
+  line-height: 100px;
+}
+
+.ltext{
+  line-height: 320px;
+  color: var(--finnish-blue);
+}
+
+
+.word-card.blue{
+  background: var(--finnish-blue);
+  color: #fff;
+}
+
+.word-card.red{
+  background:var(--finnish-red);
+  color:var(--finnish-yellow);
+}
+
+.word-card.yellow{
+  background:var(--finnish-yellow);
+  color:var(--finnish-red);
+}
+
+
+.card.gray{
+  background:#fff;
+  width:1100px;
+  /* display: inline; */
+  margin: 100px auto;
+}
+
+.no-margin{
+  margin:0;
+  padding:0;
+}
+
+.rcard-image{
+  width: 100px;
+  border-radius:0;/*4px 0 0 4px;*/
+}
+
+
+/* .input-card{
+  height:100px;
+  width: 1210px;
+  margin: 5px auto;
+  padding: 0 0 0 5px;
+} */
+
+.word-input-flex{
+  flex: 0 1 1220px;
+  /* max-width: 1210px; */
+  padding:0 5px 0 5px;
+  /* min-width: 600px; */
+}
+
+.word-input{
+  /* display: inline-block; */
+  color: black;
+  /* min-width: 1000px; */
+  /* box-sizing: border-box; */
+  background-color: rgba(0,0,0,0.25);
+  border: none;
+  border-radius: var(--border-rad);
+  /* margin: 10px auto; */
+  transition:background-color 0.5s ease;
+  font-size:30pt;
+  /* margin: 10px auto; */
+  /* margin-left: 100; */
+  /* display:inline-block; */
+  /* padding:15px 10px; */
+  /* font-size: 30px; */
+  font-family: Comfortaa;
+  /* box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12); */
+  width:100%;
+  padding: 20px;
+}
+
+/* span{overflow:hidden;} */
+
+::placeholder{
+  overflow: visible;
+  }
+/* 
+.center-div{
+  width: 1010px;
+} */
