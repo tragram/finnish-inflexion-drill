@@ -43,11 +43,11 @@ class UserTextInput extends React.Component {
     //{this.props.errorState?"flag-uk.svg":""}
     return (
       <div className="word-input-flex">
-      <input type="text" className={"word-input " + this.props.background_cls}
-        placeholder="type here the word in the form specified" onKeyPress={this.handleKeyPress}
-        onChange={(evt) => { this.setState({ value: evt.target.value }); }}
-        ref={this.props.reference} autoFocus/>
-        </div>
+        <input type="text" className={"word-input " + this.props.background_cls}
+          placeholder="type here the word in the form specified" onKeyPress={this.handleKeyPress}
+          onChange={(evt) => { this.setState({ value: evt.target.value }); }}
+          ref={this.props.reference} autoFocus />
+      </div>
     )
   }
 }
@@ -71,22 +71,49 @@ class WordFlag extends React.Component {
   }
 
   generateNewWord(keys) {
-    const forms = ['', 'acc-sg', 'gen-sg', 'ptv-sg', 'ine-sg', 'ela-sg', 'ill-sg', 'ade-sg', 'abl-sg', 'all-sg', 'ess-sg', 'tra-sg', 'ins-sg', 'abe-sg', 'nom-pl', 'acc-pl', 'gen-pl', 'ptv-pl', 'ine-pl', 'ela-pl', 'ill-pl', 'ade-pl', 'abl-pl', 'all-pl', 'ess-pl', 'tra-pl', 'abe-pl', 'ins-pl', 'cmt']
+    const plurality = ['Singular', 'Plural']
+    const cases = ['nominative', 'accusative', 'genitive', 'partitive', 
+    'inessive (-ssA)', 'elative (-stA)', 'illative (hVn)',
+      'adessive (-llA)', 'ablative (-ltA)', 'allative (-lle)', 
+      'essive (-nA)', 'translative (-ksi)',
+      'instructive (-in)', 'abessive (-ttA)', 'comitative (-ne)']
+
+    // const forms = ['', 'acc-sg', 'gen-sg (-n)', 'ptv-sg', 'ine-sg', 'ela-sg', 
+    // 'ill-sg', 'ade-sg', 'abl-sg', 'all-sg', 'ess-sg', 'tra-sg', 'ins-sg', 
+    // 'abe-sg', 'nom-pl', 'acc-pl', 'gen-pl', 'ptv-pl', 'ine-pl', 'ela-pl', 
+    // 'ill-pl', 'ade-pl', 'abl-pl', 'all-pl', 'ess-pl', 'tra-pl', 'abe-pl', 
+    // 'ins-pl', 'cmt']
     const wordIndex = Math.floor(Math.random() * keys.length);
-    const formIndex = Math.floor(Math.random() * 10) + 2;
+    const pluralityIndex = 1;Math.floor(Math.random() * 2); //only singular now
+    let caseIndex;
+    if (pluralityIndex === 0) {//singular
+      // -4 because nominative sg is trivial and accusative officially does not exsist
+      // and instructive+comitative is only plural
+      caseIndex = Math.floor(Math.random() * (cases.length - 4)) + 2;
+      if (caseIndex===cases.length-2){
+        caseIndex++; // instructive --> comitative
+      }
+    } else {
+      caseIndex = Math.floor(Math.random() * (cases.length-1));
+      if(caseIndex>0){
+        caseIndex++; //offset accusative
+      }
+    }
+    const picked_form_str = plurality[pluralityIndex] + ' ' + cases[caseIndex]
+    const formIndex = (cases.length-1) * pluralityIndex + caseIndex
     const word = keys[wordIndex];
-    console.log(forms[formIndex]);
+    console.log("plurality: "+pluralityIndex+" caseIndex: " + caseIndex+ " formIndex: "+formIndex)
     console.log(data[word].forms[formIndex]);
-    return [word, data[word].forms[formIndex], forms[formIndex], data[word].tran, data[word].kotus];
+    return [word, data[word].forms[formIndex], picked_form_str, data[word].tran, data[word].kotus];
   }
 
-  flicker(color){
+  flicker(color) {
     this.setState({ textInputBG: color },
-      ()=>{
-        setTimeout(()=>{
+      () => {
+        setTimeout(() => {
           this.setState({ textInputBG: 'black-bg' })
-        },100);
-        
+        }, 100);
+
       });
   }
 
