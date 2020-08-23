@@ -4,6 +4,21 @@ import './index.css';
 import data from './kotus_nouns.json';
 import * as serviceWorker from './serviceWorker';
 
+const plurality = ['Singular', 'Plural']
+const cases = ['nominative', 'accusative', 'genitive', 'partitive',
+  'inessive (-ssA)', 'elative (-stA)', 'illative (hVn)',
+  'adessive (-llA)', 'ablative (-ltA)', 'allative (-lle)',
+  'essive (-nA)', 'translative (-ksi)',
+  'instructive (-in)', 'abessive (-ttA)', 'comitative (-ne)']
+
+//nominative sg is trivial and accusative officially does not exist
+// and instructive+comitative is only plural
+const cases_singular = [...cases.slice(2, 12), cases[13]]
+
+//remove accusative
+const cases_plural = [cases[0], ...cases.slice(2, cases.length)]
+
+
 function FinnishWord(props) {
   return (
     <div className="card word-card lcard card-text ltext"><p className="">{props.finnish_word}</p></div>
@@ -21,6 +36,113 @@ function RightCard(props) {
           <p className="card-text rtext">{props.text}</p>
         </div>
       </div>
+    </div>
+  )
+}
+
+function addInvalid(onOffValues, singular) {
+  const for_comparison = singular ? cases_singular : cases_plural;
+  let ret = [];
+  let offset = 0;
+  for (let i = 0; i < cases.length; ++i) {
+    if (for_comparison[i - offset] === cases[i]) {
+      ret.push(onOffValues[i - offset]);
+    } else {
+      ret.push(-1);
+      offset++;
+    }
+  }
+  return ret;
+}
+
+function NounSettings(props) {
+  function checkboxes() {
+    let temp = [];
+    let offsetSg = 0;
+    let offsetPl = 0;
+    for (let i = 0; i < props.cases.length; ++i) {
+      let caseName = props.cases[i];
+      const offsetSgCopy = offsetSg;
+      const offsetPlCopy = offsetPl;
+      temp.push(
+        <div className="col-sm-2">
+          {caseName}
+        </div>)
+      if (props.singularCasesOn[i] !== -1) {
+        temp.push(
+          <div className="col-sm-1 align-self-center">
+            <input type="checkbox" id="gg" name="gg" checked={props.singularCasesOn[i]}
+              onChange={() => props.onClick(true, i - offsetSgCopy)} />
+
+          </div>);
+      }
+      else {
+        temp.push(
+          <div className="col-sm-1 align-self-center">
+            <input type="checkbox" id="gg" name="gg" checked={false} readOnly disabled={true} />
+          </div>);
+        offsetSg++;
+      }
+      if (props.pluralCasesOn[i] !== -1) {
+        temp.push(
+          <div className="col-sm-1 align-self-center">
+            <input type="checkbox" id="gg" name="gg" checked={props.pluralCasesOn[i]}
+              onChange={() => props.onClick(false, i - offsetPlCopy)} />
+          </div>);
+      }
+      else {
+        temp.push(
+          <div className="col-sm-1 align-self-center">
+            <input type="checkbox" id="gg" name="gg" checked={false} readOnly disabled={true} />
+          </div>);
+        offsetPl++;
+      }
+
+      temp.push(
+        <div className="col-sm-8">
+
+        </div>);
+    }
+    return temp;
+  }
+
+  function switchAll(singular) {
+    return () => {
+      if (singular) {
+        for (let i = 0; i < cases_singular.length; ++i) {
+          props.onClick(singular, i);
+        }
+      }
+      else {
+        for (let i = 0; i < cases_plural.length; ++i) {
+          props.onClick(singular, i);
+        }
+      }
+      // console.log(props.singularCasesOn)
+      // console.log(props.singularCasesOn.reduce((a, b) => a || (b&&b!==-1)))
+    }
+  }
+  // console.log(props.singularCasesOn)
+  // console.log(props.singularCasesOn.reduce((a, b) => a || (b&&b!==-1)),false)
+  return (
+    <div className="row align-items-center">
+      <div className="col-sm-2">
+        {//TODO: settings image
+        }
+      </div>
+      <div className="col-sm-1">
+        <input type="checkbox" id="sg_cb" name="gg" checked={props.singularCasesOn.reduce((a, b) => a || (b && b !== -1), false)} onChange={switchAll(true)} />
+        <label htmlFor="sg_cb">Singular</label>
+      </div>
+      <div className="col-sm-1">
+        <input type="checkbox" id="pl_cb" name="gg" checked={props.pluralCasesOn.reduce((a, b) => a || (b && b !== -1), false)} onChange={switchAll(false)} />
+        <label htmlFor="pl_cb">Plural</label>
+      </div>
+
+      <div className="col-sm-8">
+        TBD
+      </div>
+      {checkboxes()}
     </div>
   )
 }
@@ -44,7 +166,7 @@ class UserTextInput extends React.Component {
     return (
       <div className="word-input-flex">
         <input type="text" className={"word-input " + this.props.background_cls}
-          placeholder="type here the word in the form specified" onKeyPress={this.handleKeyPress}
+          placeholder={"type '" + this.props.currentWord + "' in the form specified"} onKeyPress={this.handleKeyPress}
           onChange={(evt) => { this.setState({ value: evt.target.value }); }}
           ref={this.props.reference} autoFocus />
       </div>
@@ -57,7 +179,9 @@ class WordFlag extends React.Component {
     super(props);
     this.nouns = Object.keys(data);
     this.textRef = React.createRef();
-    const [word, ans, form, tran, kotus] = this.generateNewWord(this.nouns);
+    const singularCasesOn = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    const pluralCasesOn = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    const [word, ans, form, tran, kotus] = this.generateNewWord(this.nouns, singularCasesOn, pluralCasesOn);
     this.state = {
       currentWord: word,
       currentAnswer: ans,
@@ -65,50 +189,72 @@ class WordFlag extends React.Component {
       currentKotusType: kotus,
       currentFormName: form,
       textInputBG: 'black-bg',
+      singularCasesOn: singularCasesOn,
+      pluralCasesOn: pluralCasesOn,
     };
     this.checkInput = this.checkInput.bind(this);
     this.flicker = this.flicker.bind(this);
+    this.switchOnOff = this.switchOnOff.bind(this);
   }
 
-  generateNewWord(keys) {
-    const plurality = ['Singular', 'Plural']
-    const cases = ['nominative', 'accusative', 'genitive', 'partitive', 
-    'inessive (-ssA)', 'elative (-stA)', 'illative (hVn)',
-      'adessive (-llA)', 'ablative (-ltA)', 'allative (-lle)', 
-      'essive (-nA)', 'translative (-ksi)',
-      'instructive (-in)', 'abessive (-ttA)', 'comitative (-ne)']
-
-    // const forms = ['', 'acc-sg', 'gen-sg (-n)', 'ptv-sg', 'ine-sg', 'ela-sg', 
-    // 'ill-sg', 'ade-sg', 'abl-sg', 'all-sg', 'ess-sg', 'tra-sg', 'ins-sg', 
-    // 'abe-sg', 'nom-pl', 'acc-pl', 'gen-pl', 'ptv-pl', 'ine-pl', 'ela-pl', 
-    // 'ill-pl', 'ade-pl', 'abl-pl', 'all-pl', 'ess-pl', 'tra-pl', 'abe-pl', 
-    // 'ins-pl', 'cmt']
+  generateNewWord(keys, singularCasesOn, pluralCasesOn) {
     const wordIndex = Math.floor(Math.random() * keys.length);
-    const pluralityIndex = 1;Math.floor(Math.random() * 2);
+    const singularOn = singularCasesOn.reduce((a, b) => a || b);
+    const pluralOn = pluralCasesOn.reduce((a, b) => a || b);
+    console.log(singularCasesOn, pluralCasesOn);
+    let pluralityIndex;
+    if (singularOn && pluralOn) {
+      pluralityIndex = Math.floor(Math.random() * 2);
+    } else if (singularOn) {
+      pluralityIndex = 0;
+    } else if (pluralOn) {
+      pluralityIndex = 1;
+    } else {
+      alert("You need to specify at least one case!")
+    }
+
     let caseIndex;
     if (pluralityIndex === 0) {//singular
-      // -4 because nominative sg is trivial and accusative officially does not exsist
-      // and instructive+comitative is only plural
-      caseIndex = Math.floor(Math.random() * (cases.length - 4)) + 2;
-      if (caseIndex===cases.length-2){
-        caseIndex++; // instructive --> comitative
+      let caseOrd = Math.floor(Math.random() * singularCasesOn.reduce((a, b) => a + b));
+      let offset = 0;
+      for (let i = 0; i < singularCasesOn.length; ++i) {
+        if (singularCasesOn[i]) {
+          if (offset===0){
+            caseIndex=i;
+          } else{
+            offset--;
+          }
+        }
       }
-    } else {
-      caseIndex = Math.floor(Math.random() * (cases.length-1));
-      if(caseIndex>0){
-        caseIndex++; //offset accusative
+    } else {//plural
+      let caseOrd = Math.floor(Math.random() * pluralCasesOn.reduce((a, b) => a + b));
+      let offset = 0;
+      for (let i = 0; i < pluralCasesOn.length; ++i) {
+        if (pluralCasesOn[i]) {
+          if (offset===0){
+            caseIndex=i;
+          } else{
+            offset--;
+          }
+        }
       }
     }
-    const picked_form_str = plurality[pluralityIndex] + ' ' + cases[caseIndex]
-    const formIndex = (cases.length-1) * pluralityIndex + caseIndex
+    let picked_form_str;
+    if (pluralityIndex === 0) {
+      picked_form_str = "Singular " + cases_singular[caseIndex];
+    }
+    if (pluralityIndex === 1) {
+      picked_form_str = "Plural " + cases_plural[caseIndex];
+    }
+    const formIndex = cases_singular.length * pluralityIndex + caseIndex
     const word = keys[wordIndex];
-    console.log("plurality: "+pluralityIndex+" caseIndex: " + caseIndex+ " formIndex: "+formIndex)
+    console.log("plurality: " + pluralityIndex + " caseIndex: " + caseIndex + " formIndex: " + formIndex)
     console.log(data[word].forms[formIndex]);
     return [word, data[word].forms[formIndex], picked_form_str, data[word].tran, data[word].kotus];
   }
 
-  flicker(color) {
-    this.setState({ textInputBG: color },
+  flicker(colorCSSClass) {
+    this.setState({ textInputBG: colorCSSClass },
       () => {
         setTimeout(() => {
           this.setState({ textInputBG: 'black-bg' })
@@ -117,11 +263,28 @@ class WordFlag extends React.Component {
       });
   }
 
+  switchOnOff(singular, index) {
+    // console.log(singular,index)
+    if (singular) {
+      let newCasesOn = this.state.singularCasesOn;
+      newCasesOn[index] = !newCasesOn[index];
+      this.setState({
+        singularCasesOn: newCasesOn,
+      })
+    } else {
+      let newCasesOn = this.state.pluralCasesOn;
+      newCasesOn[index] = !newCasesOn[index];
+      this.setState({
+        pluralCasesOn: newCasesOn,
+      })
+    }
+  }
+
   checkInput(user_input) {
-    console.log(this.state.currentAnswer)
-    if (this.state.currentAnswer.includes(user_input)) {
+    const validNext = (this.state.singularCasesOn.reduce((a, b) => a || b) || this.state.pluralCasesOn.reduce((a, b) => a || b));
+    if ((this.state.currentAnswer.includes(user_input) && validNext)) {
       console.log("Correct");
-      const [word, ans, form, tran, kotus] = this.generateNewWord(this.nouns);
+      const [word, ans, form, tran, kotus] = this.generateNewWord(this.nouns, this.state.singularCasesOn, this.state.pluralCasesOn);
       this.setState({
         currentWord: word,
         currentAnswer: ans,
@@ -133,6 +296,9 @@ class WordFlag extends React.Component {
       this.flicker("green-bg")
     } else {
       this.flicker("red-bg")
+    }
+    if (!validNext) {
+      alert("You need to specify at least one case!");
     }
   }
 
@@ -158,7 +324,12 @@ class WordFlag extends React.Component {
 
         </div>
         <div className="card-flex">
-          <UserTextInput enterCallback={this.checkInput} reference={this.textRef} background_cls={this.state.textInputBG} />
+          <UserTextInput enterCallback={this.checkInput} currentWord={this.state.currentWord}
+            reference={this.textRef} background_cls={this.state.textInputBG} />
+        </div>
+        <div className="card settings mx-auto">
+          <NounSettings cases={cases} singularCasesOn={addInvalid(this.state.singularCasesOn, true)}
+            pluralCasesOn={addInvalid(this.state.pluralCasesOn, false)} onClick={this.switchOnOff} />
         </div>
       </div>
 

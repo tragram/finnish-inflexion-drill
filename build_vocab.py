@@ -13,24 +13,32 @@ with open('data/wikt.words') as json_file:
         word_dict=json.loads(line)
         fin_wikt[word_dict['word']]=word_dict
 
+def valid_forms(word):
+    # print(word['conjugation'])
+    forms=[wiktfinnish.inflect(word['conjugation'][0],("","", form,"","")) for form in wiktfinnish.CASE_FORMS]
+    forms=[*forms[2:10],forms[11:13],forms[14],*forms[16:]]
+    if len(forms[0])==0:
+        return None
+    # print([wiktfinnish.inflect(word['conjugation'],("","", form,"","")) for form in wiktfinnish.CASE_FORMS])
+    return forms
+
+
 output={}
-print(wiktfinnish.CASE_FORMS)
-quit()
 for noun in kotus_nouns:
     w=fin_wikt[noun]
-    # nuoripari: 
     try:
-        forms=[wiktfinnish.inflect(w['conjugation'][0],("","", form,"","")) for form in wiktfinnish.CASE_FORMS]
+        forms=valid_forms(w)
         tran=w['senses'][0]['glosses'][0]
         kotus=w['conjugation'][0]['template_name'].split('-')[-1]
-        output[noun]={'tran': tran, 'kotus': kotus, 'forms': forms}
+        if forms is not None:
+            output[noun]={'tran': tran, 'kotus': kotus, 'forms': forms}
     except:
         print(w)
 with open('data/kotus_nouns.json','w') as out_file:
     json.dump(output,out_file)
 
-
 quit()
+
 for word in fin_wikt:
     w=fin_wikt[word]
     # print(w['conjugation'])
