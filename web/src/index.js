@@ -192,8 +192,8 @@ class WordFlag extends React.Component {
     super(props);
     this.nouns = Object.keys(data);
     this.textRef = React.createRef();
-    const singularCasesOn = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-    const pluralCasesOn = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    const singularCasesOn = JSON.parse(localStorage.getItem('singularCasesOn'))||[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    const pluralCasesOn = JSON.parse(localStorage.getItem('pluralCasesOn'))||[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     const [word, ans, form, tran, kotus] = this.generateNewWord(this.nouns, singularCasesOn, pluralCasesOn);
     this.state = {
       currentWord: word,
@@ -284,12 +284,14 @@ class WordFlag extends React.Component {
       this.setState({
         singularCasesOn: newCasesOn,
       })
+      localStorage.setItem('singularCasesOn', JSON.stringify(newCasesOn));
     } else {
       let newCasesOn = this.state.pluralCasesOn;
       newCasesOn[index] = !newCasesOn[index];
       this.setState({
         pluralCasesOn: newCasesOn,
       })
+      localStorage.setItem('pluralCasesOn', JSON.stringify(newCasesOn));
     }
   }
 
