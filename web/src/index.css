@@ -58,7 +58,7 @@ code {
 }
 
 .rcard {
-    font-size: 1.5em;
+    /* font-size: 1.5em; */
     font-weight: 400;
     height: 100px;
     padding: 0;
@@ -145,7 +145,7 @@ code {
     border: none;
     border-radius: var(--border-rad);
     /* margin: 10px auto; */
-    font-size: 30pt;
+    /* font-size: 30pt; */
     /* margin: 10px auto; */
     /* margin-left: 100; */
     /* display:inline-block; */
@@ -196,7 +196,6 @@ code {
     border-radius: var(--border-rad);
     padding: 40px;
     font-family: Comfortaa;
-    ;
     color: white;
     margin-top: 20px;
 }

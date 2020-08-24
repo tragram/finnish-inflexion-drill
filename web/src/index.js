@@ -26,6 +26,10 @@ function FinnishWord(props) {
 }
 
 function RightCard(props) {
+  console.log(props.fontSize)
+  const style = {
+    fontSize: props.fontSize+"em",
+  }
   return (
     <div className={"container card word-card rcard " + props.cls}>
       <div className="row no-gutters align-items-center h-100">
@@ -33,7 +37,7 @@ function RightCard(props) {
           <img className="rcard-image" src={props.image} />
         </div>
         <div className="col-sm-11 ">
-          <p className="card-text rtext">{props.text}</p>
+          <p className="card-text rtext" style={style}>{props.text}</p>
         </div>
       </div>
     </div>
@@ -53,6 +57,15 @@ function addInvalid(onOffValues, singular) {
     }
   }
   return ret;
+}
+
+function indeterminateCheckbox(props) {
+  let checked = props.truthArray.reduce((a, b) => a && b)
+  let unchecked = props.truthArray.reduce((a, b) => a && !b)
+  return (
+    <input type="checkbox" id={props.id} checked={checked}
+      onChange={() => props.onClick(props.singular, props.index)} />
+  )
 }
 
 function NounSettings(props) {
@@ -219,9 +232,9 @@ class WordFlag extends React.Component {
       let offset = 0;
       for (let i = 0; i < singularCasesOn.length; ++i) {
         if (singularCasesOn[i]) {
-          if (offset===0){
-            caseIndex=i;
-          } else{
+          if (offset === 0) {
+            caseIndex = i;
+          } else {
             offset--;
           }
         }
@@ -231,9 +244,9 @@ class WordFlag extends React.Component {
       let offset = 0;
       for (let i = 0; i < pluralCasesOn.length; ++i) {
         if (pluralCasesOn[i]) {
-          if (offset===0){
-            caseIndex=i;
-          } else{
+          if (offset === 0) {
+            caseIndex = i;
+          } else {
             offset--;
           }
         }
@@ -303,6 +316,10 @@ class WordFlag extends React.Component {
   }
 
   render() {
+    function computeFontSize(text) {
+      let l = text.length;
+      return Math.max(Math.min(2,(2+33/22 - l/18)),0.6)
+    }
     return (
       <div className="word-flag">
         <div /*class="card gray"*/>
@@ -313,9 +330,9 @@ class WordFlag extends React.Component {
             </div>
 
             <div className="r-stretch">
-              <RightCard text={this.state.currentTranslation} cls='blue' image="translation.svg" />
-              <RightCard text={this.state.currentFormName} cls='red' image="target.svg" />
-              <RightCard text={this.state.currentKotusType} cls='yellow' image="kotus_type.svg" />
+              <RightCard text={this.state.currentTranslation} fontSize={computeFontSize(this.state.currentTranslation)} cls='blue' image="translation.svg" />
+              <RightCard text={this.state.currentFormName} fontSize={computeFontSize(this.state.currentFormName)} cls='red' image="target.svg" />
+              <RightCard text={this.state.currentKotusType} fontSize={computeFontSize(this.state.currentKotusType)} cls='yellow' image="kotus_type.svg" />
               {/* https://en.wiktionary.org/wiki/Appendix:Finnish_nominal_inflection/nuoripari
               https://en.wiktionary.org/wiki/Appendix:Finnish_conjugation */}
             </div>
