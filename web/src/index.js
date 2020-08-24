@@ -229,26 +229,25 @@ class WordFlag extends React.Component {
     let caseIndex;
     if (pluralityIndex === 0) {//singular
       let caseOrd = Math.floor(Math.random() * singularCasesOn.reduce((a, b) => a + b));
-      let offset = 0;
       for (let i = 0; i < singularCasesOn.length; ++i) {
         if (singularCasesOn[i]) {
-          if (offset === 0) {
-            caseIndex = i;
-          } else {
-            offset--;
-          }
+          caseOrd--;
+        }
+        if(caseOrd<0){
+          caseIndex=i;
+          break;
         }
       }
+      // caseIndex = caseOrd+offset;
     } else {//plural
       let caseOrd = Math.floor(Math.random() * pluralCasesOn.reduce((a, b) => a + b));
-      let offset = 0;
       for (let i = 0; i < pluralCasesOn.length; ++i) {
         if (pluralCasesOn[i]) {
-          if (offset === 0) {
-            caseIndex = i;
-          } else {
-            offset--;
-          }
+          caseOrd--;
+        }
+        if(caseOrd<0){
+          caseIndex=i;
+          break;
         }
       }
     }
