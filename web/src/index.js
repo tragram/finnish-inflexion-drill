@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import data from './kotus_nouns.json';
+import kotusNouns from './kotus_nouns.json';
+import data from './top_nouns.json'
 import * as serviceWorker from './serviceWorker';
 
 const plurality = ['Singular', 'Plural']
@@ -14,7 +15,7 @@ const cases = ['nominative', 'accusative', 'genitive', 'partitive',
 //nominative sg is trivial and accusative officially does not exist
 // and instructive+comitative is only plural
 const cases_singular = [...cases.slice(2, 12), cases[13]]
-
+console.log(cases_singular)
 //remove accusative
 const cases_plural = [cases[0], ...cases.slice(2, cases.length)]
 
