@@ -17,6 +17,15 @@ code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
+.row+.row{
+    margin-top:5px;
+}
+
+.control-group{
+display: inline-block;
+vertical-align: top;
+}
+
 .card-flex {
     /* We first create a flex layout context */
     display: flex;
@@ -200,9 +209,9 @@ code {
     margin-top: 20px;
 }
 
-input[type=checkbox] {
+/* input[type=checkbox] {
     zoom: 2;
-}
+} */
 
 /* input[type=text] {
     transform: scale(5);
