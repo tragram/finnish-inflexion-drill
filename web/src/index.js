@@ -292,7 +292,10 @@ class UserIO extends React.Component {
 
   checkUserAnswer = (answer) => {
     this.props.checkUserAnswer(answer,
-      () => this.flicker("green-bg"),
+      () => {
+        this.inputRef.current.value="";
+        this.flicker("green-bg");
+      },
       () => this.flicker("red-bg"));
   }
 
