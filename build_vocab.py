@@ -24,7 +24,7 @@ def valid_noun_forms(word):
     # print(word['conjugation'])
     forms=[wiktfinnish.inflect(word['conjugation'][0],("","", form,"","")) for form in wiktfinnish.CASE_FORMS]
     # print(forms)
-    forms=[*forms[2:12],*forms[13:15],*forms[16:]]
+    forms=[forms[0],*forms[2:14],[],forms[14],*forms[16:]]
     # print(forms)
     if len(forms[0])==0:
         return None
@@ -70,7 +70,7 @@ def generate_top_nouns(n):
                     break
         except Exception as e:
             print(e)
-
+    # print(output)
     with open('data/top_nouns.json','w') as out_file:
         json.dump(output,out_file)
 

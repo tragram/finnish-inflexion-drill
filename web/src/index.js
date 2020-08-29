@@ -2,22 +2,23 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import kotusNouns from './kotus_nouns.json';
-import data from './top_nouns.json'
+import topNouns from './top_nouns.json'
 import * as serviceWorker from './serviceWorker';
 
-const plurality = ['Singular', 'Plural']
-const cases = ['nominative', 'accusative', 'genitive', 'partitive',
+const ALWAYS_INVALID = -1;
+const plurality = ['singular', 'plural'];
+const cases = ['nominative', 'genitive', 'partitive',
   'inessive (-ssA)', 'elative (-stA)', 'illative (hVn)',
   'adessive (-llA)', 'ablative (-ltA)', 'allative (-lle)',
   'essive (-nA)', 'translative (-ksi)',
-  'instructive (-in)', 'abessive (-ttA)', 'comitative (-ne)']
-
+  'instructive (-in)', 'abessive (-ttA)', 'comitative (-ne)'];
 //nominative sg is trivial and accusative officially does not exist
 // and instructive+comitative is only plural
-const cases_singular = [...cases.slice(2, 12), cases[13]]
-console.log(cases_singular)
-//remove accusative
-const cases_plural = [cases[0], ...cases.slice(2, cases.length)]
+const validSgCases = [ALWAYS_INVALID, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ALWAYS_INVALID, 1, ALWAYS_INVALID];
+const validPlCases = cases.map(() => 1)
+
+// const cases_singular = [...cases.slice(2, 12), cases[13]]
+// const cases_plural = [cases[0], ...cases.slice(2, cases.length)]
 
 
 function FinnishWord(props) {
@@ -27,9 +28,8 @@ function FinnishWord(props) {
 }
 
 function RightCard(props) {
-  console.log(props.fontSize)
   const style = {
-    fontSize: props.fontSize+"em",
+    fontSize: props.fontSize + "em",
   }
   return (
     <div className={"container card word-card rcard " + props.cls}>
@@ -45,22 +45,7 @@ function RightCard(props) {
   )
 }
 
-function addInvalid(onOffValues, singular) {
-  const for_comparison = singular ? cases_singular : cases_plural;
-  let ret = [];
-  let offset = 0;
-  for (let i = 0; i < cases.length; ++i) {
-    if (for_comparison[i - offset] === cases[i]) {
-      ret.push(onOffValues[i - offset]);
-    } else {
-      ret.push(-1);
-      offset++;
-    }
-  }
-  return ret;
-}
-
-function indeterminateCheckbox(props) {
+function IndeterminateCheckbox(props) {
   let checked = props.truthArray.reduce((a, b) => a && b)
   let unchecked = props.truthArray.reduce((a, b) => a && !b)
   return (
@@ -69,94 +54,96 @@ function indeterminateCheckbox(props) {
   )
 }
 
-function NounSettings(props) {
-  function checkboxes() {
-    let temp = [];
-    let offsetSg = 0;
-    let offsetPl = 0;
-    for (let i = 0; i < props.cases.length; ++i) {
-      let caseName = props.cases[i];
-      const offsetSgCopy = offsetSg;
-      const offsetPlCopy = offsetPl;
-      temp.push(
-        <div className="col-sm-2">
-          {caseName}
+function WorkingCheckbox(props) {
+  return (
+    <input type="checkbox" checked={props.checked}
+      onChange={props.onChange} />
+  )
+}
+
+function GreyedOutCheckbox() {
+  return (
+    <input type="checkbox" checked={false} readOnly disabled={true} />
+  )
+}
+
+function CheckboxColumnGroup(props) {
+  let generateCheckbox = (form, value, onChangeFun) => {
+    if (value !== -1) {
+      return (
+        <div>
+          <WorkingCheckbox key={"checkbox-" + form.replace(" ","-")}
+            checked={value} onChange={onChangeFun} /><br />
         </div>)
-      if (props.singularCasesOn[i] !== -1) {
-        temp.push(
-          <div className="col-sm-1 align-self-center">
-            <input type="checkbox" id="gg" name="gg" checked={props.singularCasesOn[i]}
-              onChange={() => props.onClick(true, i - offsetSgCopy)} />
-
-          </div>);
-      }
-      else {
-        temp.push(
-          <div className="col-sm-1 align-self-center">
-            <input type="checkbox" id="gg" name="gg" checked={false} readOnly disabled={true} />
-          </div>);
-        offsetSg++;
-      }
-      if (props.pluralCasesOn[i] !== -1) {
-        temp.push(
-          <div className="col-sm-1 align-self-center">
-            <input type="checkbox" id="gg" name="gg" checked={props.pluralCasesOn[i]}
-              onChange={() => props.onClick(false, i - offsetPlCopy)} />
-          </div>);
-      }
-      else {
-        temp.push(
-          <div className="col-sm-1 align-self-center">
-            <input type="checkbox" id="gg" name="gg" checked={false} readOnly disabled={true} />
-          </div>);
-        offsetPl++;
-      }
-
-      temp.push(
-        <div className="col-sm-8">
-
-        </div>);
+    } else {
+      return <GreyedOutCheckbox key={"checkbox-" + form.replace(" ","-")}/>
     }
-    return temp;
   }
 
+  return (
+    props.forms.map((form, index) => generateCheckbox(form, props.formsOn[index], () => props.onClick(index)))
+  )
+}
+
+function NounSettings(props) {
   function switchAll(singular) {
     return () => {
       if (singular) {
-        for (let i = 0; i < cases_singular.length; ++i) {
-          props.onClick(singular, i);
+        for (let i = 0; i < cases.length; ++i) {
+          props.onClick(i);
         }
       }
       else {
-        for (let i = 0; i < cases_plural.length; ++i) {
-          props.onClick(singular, i);
+        for (let i = 0; i < cases.length; ++i) {
+          props.onClick(i + 14);
         }
       }
-      // console.log(props.singularCasesOn)
-      // console.log(props.singularCasesOn.reduce((a, b) => a || (b&&b!==-1)))
     }
   }
-  // console.log(props.singularCasesOn)
-  // console.log(props.singularCasesOn.reduce((a, b) => a || (b&&b!==-1)),false)
-  return (
-    <div className="row align-items-center">
-      <div className="col-sm-2">
-        {//TODO: settings image
-        }
-      </div>
-      <div className="col-sm-1">
-        <input type="checkbox" id="sg_cb" name="gg" checked={props.singularCasesOn.reduce((a, b) => a || (b && b !== -1), false)} onChange={switchAll(true)} />
-        <label htmlFor="sg_cb">Singular</label>
-      </div>
-      <div className="col-sm-1">
-        <input type="checkbox" id="pl_cb" name="gg" checked={props.pluralCasesOn.reduce((a, b) => a || (b && b !== -1), false)} onChange={switchAll(false)} />
-        <label htmlFor="pl_cb">Plural</label>
-      </div>
 
-      <div className="col-sm-8">
-        TBD
+  function generateFormTexts(forms) {
+    return forms.slice(0, 14).map(form => <div> {form.slice("Singular ".length)}<br /> </div>);
+  }
+
+  let singularCases = props.forms.slice(0, 14);
+  let pluralCases = props.forms.slice(14);
+  let singularCasesOn = props.formsOn.slice(0, 14);
+  let pluralCasesOn = props.formsOn.slice(14);
+
+  return (
+    <div className="card settings mx-auto">
+      <div className="row align-items-center">
+        <div className="col-sm-2">
+          {//TODO: settings image
+          }
+        </div>
+        <div className="col-sm-1">
+          <input type="checkbox" id="sg_cb" name="gg" checked={singularCasesOn.reduce((a, b) => a || (b && b !== -1), false)} onChange={switchAll(true)} />
+          <label htmlFor="sg_cb">Singular</label>
+        </div>
+        <div className="col-sm-1">
+          <input type="checkbox" id="pl_cb" name="gg" checked={pluralCasesOn.reduce((a, b) => a || (b && b !== -1), false)} onChange={switchAll(false)} />
+          <label htmlFor="pl_cb">Plural</label>
+        </div>
+
+        <div className="col-sm-8">
+          TBD
+        </div>
       </div>
-      {checkboxes()}
+      <div className="row align-items-center">
+        <div className="col-sm-2">
+          {generateFormTexts(props.forms)}
+        </div>
+        <div className="col-sm-1">
+          <CheckboxColumnGroup forms={singularCases} formsOn={singularCasesOn} onClick={(index) => props.onClick(index)} />
+        </div>
+        <div className="col-sm-1">
+          <CheckboxColumnGroup forms={pluralCases} formsOn={pluralCasesOn} onClick={(index) => props.onClick(index + 14)} />
+        </div>
+        <div className="col-sm-8">
+          TBD
+        </div>
+      </div>
     </div>
   )
 }
@@ -166,7 +153,7 @@ class UserTextInput extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: null,
+      value: "",
     };
   }
 
@@ -176,7 +163,6 @@ class UserTextInput extends React.Component {
     }
   }
   render() {
-    //{this.props.errorState?"flag-uk.svg":""}
     return (
       <div className="word-input-flex">
         <input type="text" className={"word-input " + this.props.background_cls}
@@ -188,85 +174,108 @@ class UserTextInput extends React.Component {
   }
 }
 
-class WordFlag extends React.Component {
+class WordManager extends React.Component {
   constructor(props) {
     super(props);
-    this.nouns = Object.keys(data);
-    this.textRef = React.createRef();
-    const singularCasesOn = JSON.parse(localStorage.getItem('singularCasesOn'))||[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-    const pluralCasesOn = JSON.parse(localStorage.getItem('pluralCasesOn'))||[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-    const [word, ans, form, tran, kotus] = this.generateNewWord(this.nouns, singularCasesOn, pluralCasesOn);
+    this.topWords = props.top;
+    this.kotusWords = props.kotus;
+    this.topWordsKeys = Object.keys(this.topWords);
+    this.kotusWordsKeys = Object.keys(this.kotusWords);
+    this.forms = props.forms;
+    this.mode = props.mode;
+    this.formSettingsName = this.mode + "On";
+    this.dataSettingsName = this.mode + "Data";
     this.state = {
-      currentWord: word,
-      currentAnswer: ans,
-      currentTranslation: tran,
-      currentKotusType: kotus,
-      currentFormName: form,
-      textInputBG: 'black-bg',
-      singularCasesOn: singularCasesOn,
-      pluralCasesOn: pluralCasesOn,
+      formsOn: JSON.parse(localStorage.getItem(this.formSettingsName)) || props.defaultForms,
+      currentData: JSON.parse(localStorage.getItem(this.dataSettingsName)) || {
+        keys: this.topWordsKeys,
+        data: this.topWords
+      },
+      currentWord: "",
+      currentAnswer: "",
+      currentTranslation: "",
+      currentKotusType: "",
+      currentFormName: "",
     };
-    this.checkInput = this.checkInput.bind(this);
-    this.flicker = this.flicker.bind(this);
-    this.switchOnOff = this.switchOnOff.bind(this);
+
+
+  }
+  componentDidMount() {
+    this.generateNewWord();
   }
 
-  generateNewWord(keys, singularCasesOn, pluralCasesOn) {
-    const wordIndex = Math.floor(Math.random() * keys.length);
-    const singularOn = singularCasesOn.reduce((a, b) => a || b);
-    const pluralOn = pluralCasesOn.reduce((a, b) => a || b);
-    console.log(singularCasesOn, pluralCasesOn);
-    let pluralityIndex;
-    if (singularOn && pluralOn) {
-      pluralityIndex = Math.floor(Math.random() * 2);
-    } else if (singularOn) {
-      pluralityIndex = 0;
-    } else if (pluralOn) {
-      pluralityIndex = 1;
+  generateNewWord = () => {
+    const wordIndex = Math.floor(Math.random() * this.state.currentData.keys.length);
+    const word = this.state.currentData.keys[wordIndex];
+
+    const formsOnCount = this.state.formsOn.map(el => (el === 1 ? el : 0)).reduce((a, b) => a + b)
+    let formSubsetIndex = Math.floor(Math.random() * formsOnCount);
+    let trueFormIndex = 0;//=formSubsetIndex
+    for (let i = 0; i < this.forms.length; ++i) {
+      if (this.state.formsOn[i] === 1) {
+        formSubsetIndex--;
+      }
+      if (formSubsetIndex < 0) {
+        break;
+      }
+      trueFormIndex++;
+    }
+
+    const currentEntry = this.state.currentData.data[word];
+    this.setState({
+      currentWord: word,
+      currentFormName: this.forms[trueFormIndex],
+      currentAnswer: currentEntry.forms[trueFormIndex],
+      currentTranslation: currentEntry.tran,
+      currentKotusType: currentEntry.kotus
+    })
+    console.log(currentEntry.forms[trueFormIndex]);
+  }
+
+  checkUserAnswer = (answer, correctCallback, incorrectCallback) => {
+    if (this.state.currentAnswer.includes(answer)) {
+      correctCallback();
+      this.generateNewWord();
     } else {
-      alert("You need to specify at least one case!")
+      incorrectCallback();
     }
-
-    let caseIndex;
-    if (pluralityIndex === 0) {//singular
-      let caseOrd = Math.floor(Math.random() * singularCasesOn.reduce((a, b) => a + b));
-      for (let i = 0; i < singularCasesOn.length; ++i) {
-        if (singularCasesOn[i]) {
-          caseOrd--;
-        }
-        if(caseOrd<0){
-          caseIndex=i;
-          break;
-        }
-      }
-      // caseIndex = caseOrd+offset;
-    } else {//plural
-      let caseOrd = Math.floor(Math.random() * pluralCasesOn.reduce((a, b) => a + b));
-      for (let i = 0; i < pluralCasesOn.length; ++i) {
-        if (pluralCasesOn[i]) {
-          caseOrd--;
-        }
-        if(caseOrd<0){
-          caseIndex=i;
-          break;
-        }
-      }
-    }
-    let picked_form_str;
-    if (pluralityIndex === 0) {
-      picked_form_str = "Singular " + cases_singular[caseIndex];
-    }
-    if (pluralityIndex === 1) {
-      picked_form_str = "Plural " + cases_plural[caseIndex];
-    }
-    const formIndex = cases_singular.length * pluralityIndex + caseIndex
-    const word = keys[wordIndex];
-    console.log("plurality: " + pluralityIndex + " caseIndex: " + caseIndex + " formIndex: " + formIndex)
-    console.log(data[word].forms[formIndex]);
-    return [word, data[word].forms[formIndex], picked_form_str, data[word].tran, data[word].kotus];
   }
 
-  flicker(colorCSSClass) {
+  switchOnOff = (index) => {
+    const afterChange = this.state.formsOn.map((el, i) => i === index ? (!el) : el);
+    console.log(afterChange[index]);
+    if (afterChange.map(el => (el === 1 ? el : 0)).reduce((a, b) => a + b) > 0) {
+      this.setState({
+        formsOn: afterChange
+      });
+      localStorage.setItem(this.formSettingsName, JSON.stringify(afterChange));
+    } else {
+      alert('At least one form has to be selected!');
+    }
+  }
+
+  render() {
+    return (
+      <div>
+        <UserIO checkUserAnswer={this.checkUserAnswer} currentWord={this.state.currentWord}
+          currentAnswer={this.state.currentAnswer} currentTranslation={this.state.currentTranslation}
+          currentKotusType={this.state.currentKotusType} currentFormName={this.state.currentFormName} />
+        <NounSettings forms={this.forms} formsOn={this.state.formsOn} onClick={this.switchOnOff} />
+      </div>
+    )
+  }
+}
+
+class UserIO extends React.Component {
+  constructor(props) {
+    super(props);
+    this.inputRef = React.createRef();
+    this.state = {
+      textInputBG: 'black-bg'
+    };
+  }
+
+  flicker = (colorCSSClass) => {
     this.setState({ textInputBG: colorCSSClass },
       () => {
         setTimeout(() => {
@@ -276,51 +285,16 @@ class WordFlag extends React.Component {
       });
   }
 
-  switchOnOff(singular, index) {
-    // console.log(singular,index)
-    if (singular) {
-      let newCasesOn = this.state.singularCasesOn;
-      newCasesOn[index] = !newCasesOn[index];
-      this.setState({
-        singularCasesOn: newCasesOn,
-      })
-      localStorage.setItem('singularCasesOn', JSON.stringify(newCasesOn));
-    } else {
-      let newCasesOn = this.state.pluralCasesOn;
-      newCasesOn[index] = !newCasesOn[index];
-      this.setState({
-        pluralCasesOn: newCasesOn,
-      })
-      localStorage.setItem('pluralCasesOn', JSON.stringify(newCasesOn));
-    }
-  }
-
-  checkInput(user_input) {
-    const validNext = (this.state.singularCasesOn.reduce((a, b) => a || b) || this.state.pluralCasesOn.reduce((a, b) => a || b));
-    if ((this.state.currentAnswer.includes(user_input) && validNext)) {
-      console.log("Correct");
-      const [word, ans, form, tran, kotus] = this.generateNewWord(this.nouns, this.state.singularCasesOn, this.state.pluralCasesOn);
-      this.setState({
-        currentWord: word,
-        currentAnswer: ans,
-        currentTranslation: tran,
-        currentKotusType: kotus,
-        currentFormName: form,
-      });
-      this.textRef.current.value = '';
-      this.flicker("green-bg")
-    } else {
-      this.flicker("red-bg")
-    }
-    if (!validNext) {
-      alert("You need to specify at least one case!");
-    }
+  checkUserAnswer = (answer) => {
+    this.props.checkUserAnswer(answer,
+      () => this.flicker("green-bg"),
+      () => this.flicker("red-bg"));
   }
 
   render() {
     function computeFontSize(text) {
       let l = text.length;
-      return Math.max(Math.min(2,(2+33/22 - l/18)),0.6)
+      return Math.max(Math.min(2, (2 + 33 / 22 - l / 18)), 0.6)
     }
     return (
       <div className="word-flag">
@@ -328,13 +302,13 @@ class WordFlag extends React.Component {
           <div className="row card-flex">
 
             <div className="l-stretch">
-              <FinnishWord finnish_word={this.state.currentWord} />
+              <FinnishWord finnish_word={this.props.currentWord} />
             </div>
 
             <div className="r-stretch">
-              <RightCard text={this.state.currentTranslation} fontSize={computeFontSize(this.state.currentTranslation)} cls='blue' image="translation.svg" />
-              <RightCard text={this.state.currentFormName} fontSize={computeFontSize(this.state.currentFormName)} cls='red' image="target.svg" />
-              <RightCard text={this.state.currentKotusType} fontSize={computeFontSize(this.state.currentKotusType)} cls='yellow' image="kotus_type.svg" />
+              <RightCard text={this.props.currentTranslation} fontSize={computeFontSize(this.props.currentTranslation)} cls='blue' image="translation.svg" />
+              <RightCard text={this.props.currentFormName} fontSize={computeFontSize(this.props.currentFormName)} cls='red' image="target.svg" />
+              <RightCard text={this.props.currentKotusType} fontSize={computeFontSize(this.props.currentKotusType)} cls='yellow' image="kotus_type.svg" />
               {/* https://en.wiktionary.org/wiki/Appendix:Finnish_nominal_inflection/nuoripari
               https://en.wiktionary.org/wiki/Appendix:Finnish_conjugation */}
             </div>
@@ -343,21 +317,21 @@ class WordFlag extends React.Component {
 
         </div>
         <div className="card-flex">
-          <UserTextInput enterCallback={this.checkInput} currentWord={this.state.currentWord}
-            reference={this.textRef} background_cls={this.state.textInputBG} />
-        </div>
-        <div className="card settings mx-auto">
-          <NounSettings cases={cases} singularCasesOn={addInvalid(this.state.singularCasesOn, true)}
-            pluralCasesOn={addInvalid(this.state.pluralCasesOn, false)} onClick={this.switchOnOff} />
+          <UserTextInput enterCallback={this.checkUserAnswer} currentWord={this.state.currentWord}
+            reference={this.inputRef} background_cls={this.state.textInputBG} />
         </div>
       </div>
-
     );
   }
 }
 
+function nounForms() {
+  return [...Array(28).keys()].map(i => (plurality[i >= 14 ? 1 : 0] + " " + cases[i % 14]));
+}
+
 ReactDOM.render(
-  <WordFlag />,
+  <WordManager top={topNouns} kotus={kotusNouns} forms={nounForms()}
+    mode={"nouns"} defaultForms={[...validSgCases, ...validPlCases]} />,
   document.getElementById('root')
 );
 
