@@ -40,7 +40,7 @@ function RightCard(props) {
     <div className={"container card word-card rcard " + props.cls}>
       <div className="row no-gutters align-items-center h-100">
         <div className="col-sm-1">
-          <img className="rcard-image" alt="" src={props.image} onError={console.log("img not found")} />
+          <img className="rcard-image" alt="" src={props.image} />
         </div>
         <div className="col-sm-11 ">
           <p className="card-text rtext" style={style}>{props.text}</p>
@@ -88,10 +88,10 @@ function CheckboxRow(props) {
         {props.form}
       </div>
       <div className="col-sm-3">
-        {generateCheckbox(props.form, props.onSingular, () => props.onClick(props.index))}
+        {generateCheckbox(props.form + "-sg", props.onSingular, () => props.onClick(props.index))}
       </div>
       <div className="col-sm-3">
-        {generateCheckbox(props.form, props.onPlural, () => props.onClick(props.index + cases.length))}
+        {generateCheckbox(props.form + "-pl", props.onPlural, () => props.onClick(props.index + cases.length))}
       </div>
     </div>
   )
@@ -141,19 +141,20 @@ function NounSettings(props) {
           </div>
 
 
-          {props.forms.slice(0, cases.length).map((form, index) => <CheckboxRow
+          {props.forms.slice(0, cases.length).map((form, index) => <CheckboxRow key={form}
             form={form.slice("Singular ".length)} onClick={props.onClick} index={index}
             onSingular={singularCasesOn[index]} onPlural={pluralCasesOn[index]} />)}
         </div>
         <div className="col-sm-4">
           <dl>
             <li>press ',' to show the next letter</li>
-            <li>press '.' to show finish the word</li>
+            <li>press '.' to show the answer</li>
             <li>press '/' to go generate a different word</li>
+            {/* <li>press ';' to generate a different form of the same word</li> */}
           </dl>
         </div>
         <div className="col-sm-3">
-          <a href="https://uusikielemme.fi/finnish-grammar/" target="_blank">Learn more at Uusi kielemme
+          <a href="https://uusikielemme.fi/finnish-grammar/" target="_blank" rel='noopener noreferrer'>Learn more at Uusi kielemme
           <img src="https://uusikielemme.fi/wp-content/uploads/new-u.png" style={{ "width": "100px" }} />
            (not affiliated in any way)</a>
         </div>
@@ -168,21 +169,55 @@ class UserTextInput extends React.Component {
     super(props);
     this.state = {
       value: "",
+      textInputBG: 'black-bg',
     };
+  }
+
+  flicker = (colorCSSClass) => {
+    this.setState({ textInputBG: colorCSSClass },
+      () => {
+        setTimeout(() => {
+          this.setState({ textInputBG: 'black-bg' })
+        }, 100);
+
+      });
   }
 
   handleKeyPress = (event) => {
     if (event.key === 'Enter') {
-      this.props.enterCallback(this.state.value);
+      if (this.props.currentAnswer.includes(this.state.value)) {
+        this.props.onCorrectAnswer();
+        this.flicker("green-bg");
+        this.setState({ value: "" });
+      } else {
+        this.flicker("red-bg");
+      }
+    } else if (event.key === ',') {
+      let newValue = "";
+      for (let i = 0; i <= Math.min(this.state.value.length, this.props.currentAnswer[0].length); ++i) {
+        if (i===this.props.currentAnswer[0].length){
+          newValue=this.props.currentAnswer[0];
+          break;
+        }
+        else if (this.state.value.len < i || this.state.value[i] !== this.props.currentAnswer[0][i]) {
+          newValue = this.props.currentAnswer[0].slice(0, i + 1);
+          break;
+        }
+      }
+      this.setState({ value: newValue });
+    } else if (event.key === '.') {
+      this.setState({ value: this.props.currentAnswer[0] });
+    } else if (event.key === '/') {
+      this.props.onCorrectAnswer();
     }
   }
   render() {
     return (
       <div className="word-input-flex">
-        <input type="text" className={"word-input " + this.props.background_cls}
+        <input type="text" className={"word-input " + this.state.textInputBG}
           placeholder={"type '" + this.props.currentWord + "' in the form specified"} onKeyPress={this.handleKeyPress}
-          onChange={(evt) => { this.setState({ value: evt.target.value }); }}
-          ref={this.props.reference} autoFocus />
+          onChange={(evt) => { this.setState({ value: evt.target.value.replace(/[^A-Za-zäöÄÖšž]/g, "") }); }}
+          ref={this.props.reference} autoFocus value={this.state.value} />
       </div>
     )
   }
@@ -255,13 +290,8 @@ class WordManager extends React.Component {
     console.log(currentEntry.forms[trueFormIndex]);
   }
 
-  checkUserAnswer = (answer, correctCallback, incorrectCallback) => {
-    if (this.state.currentAnswer.includes(answer)) {
-      correctCallback();
-      this.generateNewWord();
-    } else {
-      incorrectCallback();
-    }
+  onCorrectAnswer = () => {
+    this.generateNewWord();
   }
 
   switchOnOff = (indexes) => {
@@ -284,7 +314,7 @@ class WordManager extends React.Component {
   render() {
     return (
       <div>
-        <UserIO checkUserAnswer={this.checkUserAnswer} currentWord={this.state.currentWord}
+        <UserIO onCorrectAnswer={this.onCorrectAnswer} currentWord={this.state.currentWord}
           currentAnswer={this.state.currentAnswer} currentTranslation={this.state.currentTranslation}
           currentKotusType={this.state.currentKotusType} currentFormName={this.state.currentFormName} />
         <NounSettings forms={this.forms} formsOn={this.state.formsOn} onClick={this.switchOnOff} />
@@ -294,33 +324,6 @@ class WordManager extends React.Component {
 }
 
 class UserIO extends React.Component {
-  constructor(props) {
-    super(props);
-    this.inputRef = React.createRef();
-    this.state = {
-      textInputBG: 'black-bg'
-    };
-  }
-
-  flicker = (colorCSSClass) => {
-    this.setState({ textInputBG: colorCSSClass },
-      () => {
-        setTimeout(() => {
-          this.setState({ textInputBG: 'black-bg' })
-        }, 100);
-
-      });
-  }
-
-  checkUserAnswer = (answer) => {
-    this.props.checkUserAnswer(answer,
-      () => {
-        this.inputRef.current.value = "";
-        this.flicker("green-bg");
-      },
-      () => this.flicker("red-bg"));
-  }
-
   render() {
     // for(let i=100;i>=20;--i){
     //   getTextWidth("päähenkilö",i+"px Comfortaa");
@@ -353,8 +356,8 @@ class UserIO extends React.Component {
 
         </div>
         <div className="card-flex">
-          <UserTextInput enterCallback={this.checkUserAnswer} currentWord={this.state.currentWord}
-            reference={this.inputRef} background_cls={this.state.textInputBG} />
+          <UserTextInput onCorrectAnswer={this.props.onCorrectAnswer} currentWord={this.props.currentWord}
+            currentAnswer={this.props.currentAnswer} />
         </div>
       </div>
     );
