@@ -17,13 +17,13 @@ code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
-.row+.row{
-    margin-top:5px;
+.row+.row {
+    margin-top: 5px;
 }
 
-.control-group{
-display: inline-block;
-vertical-align: top;
+.control-group {
+    display: inline-block;
+    vertical-align: top;
 }
 
 .card-flex {
@@ -64,6 +64,8 @@ vertical-align: top;
     /* margin-bottom: 10px; */
     max-width: 600px;
     min-width: 100px;
+    word-break: break-all;
+    white-space: normal;
 }
 
 .rcard {
@@ -76,7 +78,7 @@ vertical-align: top;
 }
 
 .lcard {
-    font-size: 6em;
+    font-size: 100px;
     font-weight: 700;
     height: 320px;
     margin-left: -5px;
@@ -131,7 +133,6 @@ vertical-align: top;
     /*4px 0 0 4px;*/
 }
 
-
 /* .input-card{
   height:100px;
   width: 1210px;
@@ -182,7 +183,6 @@ vertical-align: top;
 .green-bg {
     background-color: #8BC98B;
 }
-
 
 /* span{overflow:hidden;} */
 

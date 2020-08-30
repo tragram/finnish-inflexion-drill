@@ -4,12 +4,13 @@ import './index.css';
 import kotusNouns from './kotus_nouns.json';
 import topNouns from './top_nouns.json'
 import * as serviceWorker from './serviceWorker';
+
 // import './checkbox.css'
 
 const ALWAYS_INVALID = -1;
 const plurality = ['singular', 'plural'];
 const cases = ['nominative', 'genitive', 'partitive',
-  'inessive (-ssA)', 'elative (-stA)', 'illative (hVn)',
+  'inessive (-ssA)', 'elative (-stA)', 'illative (-hVn)',
   'adessive (-llA)', 'ablative (-ltA)', 'allative (-lle)',
   'essive (-nA)', 'translative (-ksi)',
   'instructive (-in)', 'abessive (-ttA)', 'comitative (-ne)'];
@@ -23,20 +24,23 @@ const validPlCases = cases.map(() => 1)
 
 
 function FinnishWord(props) {
+  const style = {
+    fontSize: props.fontSize + "px",
+  }
   return (
-    <div className="card word-card lcard card-text ltext"><p className="">{props.finnish_word}</p></div>
+    <div className="card word-card lcard card-text ltext"><p className="" style={style}>{props.finnish_word}</p></div>
   )
 }
 
 function RightCard(props) {
   const style = {
-    fontSize: props.fontSize + "em",
+    fontSize: props.fontSize + "px",
   }
   return (
     <div className={"container card word-card rcard " + props.cls}>
       <div className="row no-gutters align-items-center h-100">
         <div className="col-sm-1">
-          <img className="rcard-image" src={props.image} />
+          <img className="rcard-image" alt="" src={props.image} onError={console.log("img not found")}/>
         </div>
         <div className="col-sm-11 ">
           <p className="card-text rtext" style={style}>{props.text}</p>
@@ -175,6 +179,15 @@ class UserTextInput extends React.Component {
   }
 }
 
+function getTextWidth(inputText,font) { 
+  const canvas = document.createElement("canvas"); 
+  const context = canvas.getContext("2d"); 
+  context.font = font; 
+  const width = context.measureText(inputText).width; 
+  const formattedWidth = Math.ceil(width)// + "px"; 
+  console.log(formattedWidth);
+} 
+
 class WordManager extends React.Component {
   constructor(props) {
     super(props);
@@ -300,9 +313,15 @@ class UserIO extends React.Component {
   }
 
   render() {
-    function computeFontSize(text) {
-      let l = text.length;
-      return Math.max(Math.min(2, (2 + 33 / 22 - l / 18)), 0.6)
+    // for(let i=100;i>=20;--i){
+    //   getTextWidth("päähenkilö",i+"px Comfortaa");
+    // }
+    function computeFontSize(text,defaultSize,textSpace) {
+      const l = text.length;
+      const coeffs=[0.885,-0.0811]
+      let resizedFontSize=Math.max(Math.min(defaultSize, (textSpace/l+coeffs[1])/coeffs[0]), defaultSize/4);
+      // console.log("Approximate width default "+(coeffs[0]*defaultSize+coeffs[1])*l+" changed to size "+resizedFontSize+"px and resulting size is "+(coeffs[0]*resizedFontSize+coeffs[1])*l)
+      return resizedFontSize;
     }
     return (
       <div className="word-flag">
@@ -310,13 +329,13 @@ class UserIO extends React.Component {
           <div className="row card-flex">
 
             <div className="l-stretch">
-              <FinnishWord finnish_word={this.props.currentWord} />
+              <FinnishWord finnish_word={this.props.currentWord} fontSize={computeFontSize(this.props.currentWord,100,550)}/>
             </div>
 
             <div className="r-stretch">
-              <RightCard text={this.props.currentTranslation} fontSize={computeFontSize(this.props.currentTranslation)} cls='blue' image="translation.svg" />
-              <RightCard text={this.props.currentFormName} fontSize={computeFontSize(this.props.currentFormName)} cls='red' image="target.svg" />
-              <RightCard text={this.props.currentKotusType} fontSize={computeFontSize(this.props.currentKotusType)} cls='yellow' image="kotus_type.svg" />
+              <RightCard text={this.props.currentTranslation} fontSize={computeFontSize(this.props.currentTranslation,30,550)} cls='blue' image={process.env.PUBLIC_URL + "/img/translation.svg"} />
+              <RightCard text={this.props.currentFormName} fontSize={computeFontSize(this.props.currentFormName,30,550)} cls='red' image={process.env.PUBLIC_URL + "/img/target.svg"} />
+              <RightCard text={this.props.currentKotusType} fontSize={computeFontSize(this.props.currentKotusType,30,550)} cls='yellow' image={process.env.PUBLIC_URL + "/img/kotus_type.svg"} />
               {/* https://en.wiktionary.org/wiki/Appendix:Finnish_nominal_inflection/nuoripari
               https://en.wiktionary.org/wiki/Appendix:Finnish_conjugation */}
             </div>
