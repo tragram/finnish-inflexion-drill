@@ -2,7 +2,7 @@
     --finnish-blue: #002f6c;
     --finnish-red: #C8102E;
     --finnish-yellow: #FFC72C;
-    --border-rad: 25px;
+    --border-rad: 15px;
 }
 
 body {
@@ -172,7 +172,7 @@ code {
 }
 
 .black-bg {
-    background-color: rgba(0, 0, 0, 0.25);
+    background-color: rgba(0, 0, 0, 0.15);
     transition: background-color 3s cubic-bezier(.18, .89, .32, 1.28);
 }
 

@@ -40,7 +40,7 @@ function RightCard(props) {
     <div className={"container card word-card rcard " + props.cls}>
       <div className="row no-gutters align-items-center h-100">
         <div className="col-sm-1">
-          <img className="rcard-image" alt="" src={props.image} onError={console.log("img not found")}/>
+          <img className="rcard-image" alt="" src={props.image} onError={console.log("img not found")} />
         </div>
         <div className="col-sm-11 ">
           <p className="card-text rtext" style={style}>{props.text}</p>
@@ -84,19 +84,15 @@ function CheckboxRow(props) {
 
   return (
     <div className="row align-items-center">
-      <div className="col-sm-2">
+      <div className="col-sm-6">
         {props.form}
       </div>
-      <div className="col-sm-1">
+      <div className="col-sm-3">
         {generateCheckbox(props.form, props.onSingular, () => props.onClick(props.index))}
       </div>
-      <div className="col-sm-1">
+      <div className="col-sm-3">
         {generateCheckbox(props.form, props.onPlural, () => props.onClick(props.index + cases.length))}
       </div>
-
-      <div className="col-sm-8">
-        TBD
-        </div>
     </div>
   )
 }
@@ -111,7 +107,7 @@ function NounSettings(props) {
       if ((singular && (allSingularOn || allSingularOff)) || (!singular && (allPluralOn || allPluralOff))) {
         props.onClick(allIndexes);
       } else {
-        props.onClick(allIndexes.filter((a, index) => !casesOn[index]&&casesOn[index]!==-1));
+        props.onClick(allIndexes.filter((a, index) => !casesOn[index] && casesOn[index] !== -1));
       }
     }
   }
@@ -126,29 +122,42 @@ function NounSettings(props) {
   return (
     <div className="card settings mx-auto">
       <div className="row">
-        <div className="col-sm-2">
-          {//TODO: settings image
-          }
-        </div>
-        <div className="col-sm-1 control-group">
-          <input type="checkbox" id="sg_cb" onChange={switchAll(true)}
-            checked={allSingularOn} />
-          <label htmlFor="sg_cb">Singular</label>
-        </div>
-        <div className="col-sm-1">
-          <input type="checkbox" id="pl_cb" onChange={switchAll(false)}
-            checked={allPluralOn} />
-          <label htmlFor="pl_cb">Plural</label>
-        </div>
+        <div className="col-sm-5">
+          <div className="row">
+            <div className="col-sm-6">
+              {//TODO: settings image
+              }
+            </div>
+            <div className="col-sm-3 control-group">
+              <input type="checkbox" id="sg_cb" onChange={switchAll(true)}
+                checked={allSingularOn} />
+              <label htmlFor="sg_cb">Singular</label>
+            </div>
+            <div className="col-sm-3">
+              <input type="checkbox" id="pl_cb" onChange={switchAll(false)}
+                checked={allPluralOn} />
+              <label htmlFor="pl_cb">Plural</label>
+            </div>
+          </div>
 
-        <div className="col-sm-8">
-          TBD
+
+          {props.forms.slice(0, cases.length).map((form, index) => <CheckboxRow
+            form={form.slice("Singular ".length)} onClick={props.onClick} index={index}
+            onSingular={singularCasesOn[index]} onPlural={pluralCasesOn[index]} />)}
+        </div>
+        <div className="col-sm-4">
+          <dl>
+            <li>press ',' to show the next letter</li>
+            <li>press '.' to show finish the word</li>
+            <li>press '/' to go generate a different word</li>
+          </dl>
+        </div>
+        <div className="col-sm-3">
+          <a href="https://uusikielemme.fi/finnish-grammar/" target="_blank">Learn more at Uusi kielemme
+          <img src="https://uusikielemme.fi/wp-content/uploads/new-u.png" style={{ "width": "100px" }} />
+           (not affiliated in any way)</a>
         </div>
       </div>
-
-      {props.forms.slice(0, cases.length).map((form, index) => <CheckboxRow
-        form={form.slice("Singular ".length)} onClick={props.onClick} index={index}
-        onSingular={singularCasesOn[index]} onPlural={pluralCasesOn[index]} />)}
     </div>
   )
 }
@@ -179,14 +188,14 @@ class UserTextInput extends React.Component {
   }
 }
 
-function getTextWidth(inputText,font) { 
-  const canvas = document.createElement("canvas"); 
-  const context = canvas.getContext("2d"); 
-  context.font = font; 
-  const width = context.measureText(inputText).width; 
+function getTextWidth(inputText, font) {
+  const canvas = document.createElement("canvas");
+  const context = canvas.getContext("2d");
+  context.font = font;
+  const width = context.measureText(inputText).width;
   const formattedWidth = Math.ceil(width)// + "px"; 
   console.log(formattedWidth);
-} 
+}
 
 class WordManager extends React.Component {
   constructor(props) {
@@ -222,11 +231,11 @@ class WordManager extends React.Component {
     const wordIndex = Math.floor(Math.random() * this.state.currentData.keys.length);
     const word = this.state.currentData.keys[wordIndex];
 
-    const formsOnCount = this.state.formsOn.map(el => (el && el!==-1 ? el : 0)).reduce((a, b) => a + b);
+    const formsOnCount = this.state.formsOn.map(el => (el && el !== -1 ? el : 0)).reduce((a, b) => a + b);
     let formSubsetIndex = Math.floor(Math.random() * formsOnCount);
     let trueFormIndex = 0;
     for (let i = 0; i < this.forms.length; ++i) {
-      if (this.state.formsOn[i] && this.state.formsOn[i]!==-1) {
+      if (this.state.formsOn[i] && this.state.formsOn[i] !== -1) {
         formSubsetIndex--;
       }
       if (formSubsetIndex < 0) {
@@ -259,9 +268,9 @@ class WordManager extends React.Component {
     if (!Array.isArray(indexes)) {
       indexes = [indexes];
     }
-    const afterChange = this.state.formsOn.map((el, i) => indexes.includes(i)&&el!==-1 ? (!el ) : el);
+    const afterChange = this.state.formsOn.map((el, i) => indexes.includes(i) && el !== -1 ? (!el) : el);
     // console.log(indexes)
-    if (afterChange.map(el => ((el && el!==-1) ? el : 0)).reduce((a, b) => a + b) > 0) {
+    if (afterChange.map(el => ((el && el !== -1) ? el : 0)).reduce((a, b) => a + b) > 0) {
       this.setState({
         formsOn: afterChange
       });
@@ -306,7 +315,7 @@ class UserIO extends React.Component {
   checkUserAnswer = (answer) => {
     this.props.checkUserAnswer(answer,
       () => {
-        this.inputRef.current.value="";
+        this.inputRef.current.value = "";
         this.flicker("green-bg");
       },
       () => this.flicker("red-bg"));
@@ -316,10 +325,10 @@ class UserIO extends React.Component {
     // for(let i=100;i>=20;--i){
     //   getTextWidth("päähenkilö",i+"px Comfortaa");
     // }
-    function computeFontSize(text,defaultSize,textSpace) {
+    function computeFontSize(text, defaultSize, textSpace) {
       const l = text.length;
-      const coeffs=[0.885,-0.0811]
-      let resizedFontSize=Math.max(Math.min(defaultSize, (textSpace/l+coeffs[1])/coeffs[0]), defaultSize/4);
+      const coeffs = [0.885, -0.0811]
+      let resizedFontSize = Math.max(Math.min(defaultSize, (textSpace / l + coeffs[1]) / coeffs[0]), defaultSize / 4);
       // console.log("Approximate width default "+(coeffs[0]*defaultSize+coeffs[1])*l+" changed to size "+resizedFontSize+"px and resulting size is "+(coeffs[0]*resizedFontSize+coeffs[1])*l)
       return resizedFontSize;
     }
@@ -329,13 +338,13 @@ class UserIO extends React.Component {
           <div className="row card-flex">
 
             <div className="l-stretch">
-              <FinnishWord finnish_word={this.props.currentWord} fontSize={computeFontSize(this.props.currentWord,100,550)}/>
+              <FinnishWord finnish_word={this.props.currentWord} fontSize={computeFontSize(this.props.currentWord, 100, 550)} />
             </div>
 
             <div className="r-stretch">
-              <RightCard text={this.props.currentTranslation} fontSize={computeFontSize(this.props.currentTranslation,30,550)} cls='blue' image={process.env.PUBLIC_URL + "/img/translation.svg"} />
-              <RightCard text={this.props.currentFormName} fontSize={computeFontSize(this.props.currentFormName,30,550)} cls='red' image={process.env.PUBLIC_URL + "/img/target.svg"} />
-              <RightCard text={this.props.currentKotusType} fontSize={computeFontSize(this.props.currentKotusType,30,550)} cls='yellow' image={process.env.PUBLIC_URL + "/img/kotus_type.svg"} />
+              <RightCard text={this.props.currentTranslation} fontSize={computeFontSize(this.props.currentTranslation, 30, 550)} cls='blue' image={process.env.PUBLIC_URL + "/img/translation.svg"} />
+              <RightCard text={this.props.currentFormName} fontSize={computeFontSize(this.props.currentFormName, 30, 550)} cls='red' image={process.env.PUBLIC_URL + "/img/target.svg"} />
+              <RightCard text={this.props.currentKotusType} fontSize={computeFontSize(this.props.currentKotusType, 30, 550)} cls='yellow' image={process.env.PUBLIC_URL + "/img/kotus_type.svg"} />
               {/* https://en.wiktionary.org/wiki/Appendix:Finnish_nominal_inflection/nuoripari
               https://en.wiktionary.org/wiki/Appendix:Finnish_conjugation */}
             </div>

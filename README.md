@@ -9,6 +9,7 @@ The website is created in React and hosted [here](https://tragram.github.io/finn
 * text might be too long to show on the cards (partially fixed)
 * website is totally broken on mobile devices
 * placeholder fort he input text is smaller and wrongly positioned
+* website doesn't directly respond to changes in the settings (probably should check if the generated word complies with the settings and possibly generate a new one/different form)
 
 ## Features TO-DO
 * kotus words checkbox & slider to select how common word is to be generated
