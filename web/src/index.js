@@ -2,9 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Nouns from './nouns'
 import Verbs from './verbs'
+import Notfound from './notfound'
 import './index.css';
 import * as serviceWorker from './serviceWorker';
-import { Route, Link, BrowserRouter as Router } from 'react-router-dom'
+import { Route, Redirect, NavLink, BrowserRouter as Router, Switch } from 'react-router-dom'
 
 
 function getTextWidth(inputText, font) {
@@ -19,9 +20,20 @@ function getTextWidth(inputText, font) {
 const routing = (
   <Router>
     <div>
-      <Route exact path="/" component={Nouns} />
-      <Route path="/nouns" component={Nouns} />
-      <Route path="/verbs" component={Verbs} />
+      <ul>
+        <li>
+          <NavLink activeClassName="active" to="/nouns">Nouns</NavLink>
+        </li>
+        <li>
+          <NavLink activeClassName="active" to="/verbs">Verbs</NavLink>
+        </li>
+      </ul>
+      <Switch>
+        <Route exact path="/">{<Redirect to="/nouns" />}</Route>
+        <Route path="/nouns" component={Nouns} />
+        <Route path="/verbs" component={Verbs} />
+        <Route component={Notfound} />
+      </Switch>
     </div>
   </Router>
 )

@@ -31,6 +31,18 @@ def valid_noun_forms(word):
     # print([wiktfinnish.inflect(word['conjugation'],("","", form,"","")) for form in wiktfinnish.CASE_FORMS])
     return forms
 
+def necessary_verb_forms(word):
+    forms_tenses=wiktfinnish.VERB_FORMS[1:43]
+    forms_participles=wiktfinnish.VERB_FORMS[43:-9]
+    inf1_long, inf2, inf2_pass, inf3, inf3_pass, inf4, inf5=wiktfinnish.VERB_FORMS[-8:-1]
+    queries=[[inf1_long,""], [inf2,"ine-sg"], [inf2_pass,"ine-sg"], [inf2,"ins-sg"],[inf3,"ine-sg"],[inf3,"ela-sg"],
+    [inf3,"ill-sg"],[inf3,"ade-sg"],[inf3,"abe-sg"],[inf3,"ins-sg"],[inf3_pass,"ins-sg"],[inf4,""],[inf5,""]]
+
+    tenses=[wiktfinnish.inflect(word['conjugation'][0],(form,"", "","","")) for form in forms_tenses]
+    participles=[wiktfinnish.inflect(word['conjugation'][0],(form,"", "","","")) for form in forms_participles]
+    infinitives=[wiktfinnish.inflect(word['conjugation'][0],(form,"", case,"","")) for form,case in queries]
+    return [*tenses,*infinitives,*participles]
+
 def remove_parenthesis(translation):
     return re.sub(r" ?\([^)]+\)", "", translation)
 
@@ -44,6 +56,15 @@ def noun_record(word):
     else:
         return None
     # return forms, tran, kotus
+
+def verb_record(word):
+    forms=necessary_verb_forms(word)
+    tran=remove_parenthesis(word['senses'][0]['glosses'][0])
+    kotus=word['conjugation'][0]['template_name'].split('-')[-1]
+    if forms is not None:
+        return {'tran': tran, 'kotus': kotus, 'forms': forms}
+    else:
+        return None
 
 def generate_kotus_nouns():
     output={}
@@ -74,10 +95,26 @@ def generate_top_nouns(n):
     with open('data/top_nouns.json','w') as out_file:
         json.dump(output,out_file)
 
-# with open('../web/src/kotus_nouns.json','w') as out_file:
-#     json.dump(output,out_file)s
+def generate_top_verbs(n):
+    output={}
+    counter=0
+    for word in most_frequent_words:
+        w=fin_wikt.get(word)
+        try:
+            if w is not None and w['pos']=='verb':
+                # print(w)
+                output[word]=verb_record(w)
+                counter+=1
+                if counter>=n:
+                    break
+        except Exception as e:
+            print(e)
+    # print(output)
+    with open('data/top_verbs.json','w') as out_file:
+        json.dump(output,out_file)
 
-generate_top_nouns(1000)
+# generate_top_nouns(1000)
+generate_top_verbs(1000)
 
 quit()
 

@@ -207,7 +207,12 @@ code {
     font-family: Comfortaa;
     color: white;
     margin-top: 20px;
+    margin-bottom: 20px;
 }
+
+.active{
+    color:red;
+ }
 
 /* input[type=checkbox] {
     zoom: 2;

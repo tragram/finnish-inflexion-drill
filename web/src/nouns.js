@@ -56,7 +56,7 @@ class Nouns extends React.Component {
         return (
             <div>
                 <WordManager top={topNouns} kotus={kotusNouns} forms={this.forms}
-                    currentData={this.state.currentData} formsOn={this.state.formsOn}/>
+                    currentData={this.state.currentData} formsOn={this.state.formsOn} mode={this.mode}/>
                 <NounSettings forms={this.forms} formsOn={this.state.formsOn} onClick={this.switchOnOff} />
             </div>
         )
