@@ -38,14 +38,14 @@ imperativeIndexes[17], imperativeIndexes[23], potentialIndexes[6], potentialInde
 potentialIndexes[27], infinitivesIndexes[2], infinitivesIndexes[10], participlesIndexes[1], participlesIndexes[3]]
 const perfectIndexes = [presentTenseIndexes, pastTenseIndexes, conditionalIndexes, imperativeIndexes, potentialIndexes].map(array => array.slice(array.length / 2, array.length)).flat()
 
-// TODO: all perfect forms
+
 function generateVerbForm(d, i) {
+    // while this function is ugly and long, there is not much to add in comments - nothing clever going on, just tedious work...
     const negative = ["en ", "et ", "ei ", "emme ", "ette ", "eivät ", "ei "];
     const imperativeNegative = ["älä ", "älköön ", "älkäämme ", "älkää ", "älkööt ", "älköön "];
     const passivePastParticiple = d[d.length - 3][0];
     const activePastParticiple = d[d.length - 4][0];
     const activeParticiplePlural = activePastParticiple.slice(0, activePastParticiple.length - 2) + "eet";
-    // console.log(activePastParticiple, activeParticiplePlural)
 
     const active = !passiveIndexes.includes(i);
     const positive = !negativeIndexes.includes(i);
@@ -235,7 +235,7 @@ class Verbs extends React.Component {
         this.formSettingsName = this.mode + "On";
         this.dataSettingsName = this.mode + "Data";
         this.state = {
-            formsOn: JSON.parse(localStorage.getItem(this.formSettingsName)) || this.forms.length,
+            formsOn: JSON.parse(localStorage.getItem(this.formSettingsName)) || Array(this.forms.length).fill(1),
             currentData: JSON.parse(localStorage.getItem(this.dataSettingsName)) || "top",
         };
     }
@@ -258,14 +258,15 @@ class Verbs extends React.Component {
     }
 
     render() {
-        console.log(topVerbs["kuulua"]["forms"])
-        let text = []
-        for (let i = 0; i < 160; ++i) {
-            text.push(generateVerbForm(topVerbs["kuulua"]["forms"], i));
-        }
+        // console.log(topVerbs["kuulua"]["forms"])
+        // let text = []
+        // for (let i = 0; i < 160; ++i) {
+        //     text.push(generateVerbForm(topVerbs["kuulua"]["forms"], i));
+        // }
+        // text.map((el, index) => (<p>{el}</p>))
         return (
-            text.map((el, index) => (<p>{el}</p>))
-
+            <WordManager top={topVerbs} kotus={kotusVerbs} forms={this.forms}
+            currentData={this.state.currentData} formsOn={this.state.formsOn} mode={this.mode}/>
             // <div>
             //     <WordManager top={topVerbs} kotus={kotusVerbs} forms={this.forms}
             //         currentData={this.state.currentData} formsOn={this.state.formsOn} mode={this.mode}/>
