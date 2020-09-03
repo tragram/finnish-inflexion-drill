@@ -61,7 +61,7 @@ def verb_record(word):
     forms=necessary_verb_forms(word)
     tran=remove_parenthesis(word['senses'][0]['glosses'][0])
     kotus=word['conjugation'][0]['template_name'].split('-')[-1]
-    if forms is not None:
+    if forms is not None and len(forms[0])>0:
         return {'tran': tran, 'kotus': kotus, 'forms': forms}
     else:
         return None
@@ -77,41 +77,34 @@ def generate_kotus_nouns():
     with open('data/kotus_nouns.json','w') as out_file:
         json.dump(output,out_file)
 
-def generate_top_nouns(n):
+def generator(n,ignore,condition,filename,noun):
     output={}
     counter=0
     for word in most_frequent_words:
         w=fin_wikt.get(word)
         try:
-            if w is not None and w['pos']=='noun' and w['heads'][0]['template_name']=='fi-noun':
+            if condition(w):
                 # print(w)
-                output[word]=noun_record(w)
-                counter+=1
-                if counter>=n:
-                    break
+                if ignore==0:
+                    output[word]=noun_record(w) if noun else verb_record(w)
+                    counter+=1
+                    if counter>=n:
+                        break
+                else:
+                    ignore-=1
         except Exception as e:
             print(e)
     # print(output)
-    with open('data/top_nouns.json','w') as out_file:
+    with open(f'data/{filename}.json','w') as out_file:
         json.dump(output,out_file)
 
-def generate_top_verbs(n):
-    output={}
-    counter=0
-    for word in most_frequent_words:
-        w=fin_wikt.get(word)
-        try:
-            if w is not None and w['pos']=='verb':
-                # print(w)
-                output[word]=verb_record(w)
-                counter+=1
-                if counter>=n:
-                    break
-        except Exception as e:
-            print(e)
-    # print(output)
-    with open('data/top_verbs.json','w') as out_file:
-        json.dump(output,out_file)
+def generate_top_nouns(n,ignore=50):
+    condition=lambda w:w is not None and w['pos']=='noun' and w['heads'][0]['template_name']=='fi-noun'
+    generator(n,ignore,condition,'top_nouns',True)
+
+def generate_top_verbs(n,ignore=50):
+    condition=lambda w:w is not None and w['pos']=='verb'
+    generator(n,ignore,condition,'top_verbs',False)
 
 # generate_top_nouns(1000)
 generate_top_verbs(1000)
