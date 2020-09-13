@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/finnish-inflexion-drill/precache-manifest.5cd0bc44b567c6d4d5044343be1f688a.js"
+  "/finnish-inflexion-drill/precache-manifest.3916df9b0e56a9ae855afb6dd074bb86.js"
 );
 
 self.addEventListener('message', (event) => {
