@@ -38,6 +38,20 @@ imperativeIndexes[17], imperativeIndexes[23], potentialIndexes[6], potentialInde
 potentialIndexes[27], infinitivesIndexes[2], infinitivesIndexes[10], participlesIndexes[1], participlesIndexes[3]]
 const perfectIndexes = [presentTenseIndexes, pastTenseIndexes, conditionalIndexes, imperativeIndexes, potentialIndexes].map(array => array.slice(array.length / 2, array.length)).flat()
 
+const tensesToIndexes = [
+    [...presentTenseIndexes.filter(x => !perfectIndexes.includes(x))],
+    [...presentTenseIndexes.filter(x => perfectIndexes.includes(x))],
+    [...pastTenseIndexes.filter(x => !perfectIndexes.includes(x))],
+    [...pastTenseIndexes.filter(x => perfectIndexes.includes(x))],
+    [...conditionalIndexes.filter(x => !perfectIndexes.includes(x))],
+    [...conditionalIndexes.filter(x => perfectIndexes.includes(x))],
+    [...imperativeIndexes.filter(x => !perfectIndexes.includes(x))],
+    [...imperativeIndexes.filter(x => perfectIndexes.includes(x))],
+    [...potentialIndexes.filter(x => !perfectIndexes.includes(x))],
+    [...potentialIndexes.filter(x => perfectIndexes.includes(x))],
+    [longFirstInfIndex], secondInfIndexes, thirdInfIndexes,
+    [fourthInfIndex], [fifthInfIndex], participlesIndexes
+];
 
 function generateVerbForm(d, i) {
     // while this function is ugly and long, there is not much to add in comments - nothing clever going on, just tedious work...
@@ -188,7 +202,6 @@ function generateVerbForm(d, i) {
                     return d[i - potentialIndexes[0] + potentialOffset];
                 } else {
                     // potential active negative
-                    console.log(i - potentialIndexes[0] - 7)
                     return negative[i - potentialIndexes[0] - 7] + d[potentialOffset + 6];
                 }
             } else {
@@ -212,7 +225,7 @@ function verbForms() {
     for (let i = 0; i < tensesMoods.length; ++i) {
         for (let k = 0; k < 2; ++k) {
             for (let j = 0; j < persons.length; ++j) {
-                if (tensesMoods[i].slice(0, "imperative".length) === "imperative" && j === 0) { console.log(tensesMoods);continue; }
+                if (tensesMoods[i].slice(0, "imperative".length) === "imperative" && j === 0) { console.log(tensesMoods); continue; }
                 let ending = k === 1 ? " negative" : "";
                 forms.push(tensesMoods[i] + " " + persons[j] + ending);
             }
@@ -231,31 +244,61 @@ class Verbs extends React.Component {
     constructor(props) {
         super(props);
         this.forms = verbForms();
-        console.log(this.forms)
         this.mode = "verbs";
         this.formSettingsName = this.mode + "On";
         this.dataSettingsName = this.mode + "Data";
+
+        this.tenses = JSON.parse(localStorage.getItem("tenseSettings")) || Array(tensesToIndexes.length).fill(1);
+        this.passivity = JSON.parse(localStorage.getItem("passivitySettings")) || "both";
+        this.negativity = JSON.parse(localStorage.getItem("negativitySettings")) || "both";
         this.state = {
-            formsOn: JSON.parse(localStorage.getItem(this.formSettingsName)) || Array(this.forms.length).fill(1),
+            formsOn: this.computeFormsOn(this.tenses, this.passivity, this.negativity),
             currentData: JSON.parse(localStorage.getItem(this.dataSettingsName)) || "top",
         };
     }
 
-    switchOnOff = (indexes, value) => {
-        if (!Array.isArray(indexes)) {
-            indexes = [indexes];
-        }
-        const afterChange = this.state.formsOn.map((el, i) => indexes.includes(i) ? value : el);
-        // console.log(indexes)
-        if (afterChange.map(el => ((el && el !== -1) ? el : 0)).reduce((a, b) => a + b) > 0) {
-            this.setState({
-                formsOn: afterChange
-            });
-            localStorage.setItem(this.formSettingsName, JSON.stringify(afterChange));
+    switchTense = (index, value) => {
+        let newTenses = this.tenses.slice();
+        newTenses[index] = value;
+        let newFormsOn = this.computeFormsOn(newTenses, this.passivity, this.negativity);
+        if (newFormsOn.map(el => ((el && el !== -1) ? el : 0)).reduce((a, b) => a + b) > 0) {
+            this.tenses = newTenses;
+            this.setState({ formsOn: newFormsOn });
         } else {
             alert('At least one form has to be selected!');
         }
-        // console.log(afterChange);
+    }
+    computeFormsOn = (tenses, passivity, negativity) => {
+        let formsOn = Array(this.forms.length).fill(1);
+        for (let i = 0; i < this.forms.length; ++i) {
+            if (negativity === "both") { }
+            else if (negativity === "positive") { formsOn[i] &= !negativeIndexes.includes(i); }
+            else if (negativity === "negative") { formsOn[i] &= negativeIndexes.includes(i); }
+
+            if (passivity === "both") { }
+            else if (passivity === "active") { formsOn[i] &= !passiveIndexes.includes(i); }
+            else if (passivity === "passive") { formsOn[i] &= passiveIndexes.includes(i); }
+
+            for (let j = 0; j < tensesToIndexes.length; ++j) {
+                if (tensesToIndexes[j].includes(i)) {
+                    formsOn[i] &= tenses[j];
+                    break;
+                }
+            }
+        }
+        return formsOn;
+    }
+
+    changeRadio = (string, value) => {
+        localStorage.setItem(string, JSON.stringify(value));
+        if (string === "negativitySettings") {
+            this.negativity = value;
+        } else if (string === "passivitySettings") {
+            this.passivity = value;
+        } else { console.log("Error, unknown radio string"); }
+        this.setState({
+            formsOn: this.computeFormsOn(this.tenses, this.passivity, this.negativity)
+        })
     }
 
     render() {
@@ -270,7 +313,8 @@ class Verbs extends React.Component {
             <div>
                 <WordManager top={topVerbs} kotus={kotusVerbs} forms={this.forms} generateForm={generateVerbForm}
                     currentData={this.state.currentData} formsOn={this.state.formsOn} mode={this.mode} />
-                <VerbSettings onClick={this.switchOnOff} forms={this.forms} formsOn={this.state.formsOn} />
+                <VerbSettings onClick={this.switchTense} changeRadio={this.changeRadio} forms={this.forms}
+                    checkboxStates={this.tenses} passivityState={this.passivity} negativityState={this.negativity} />
             </div>
         )
     }
@@ -281,32 +325,60 @@ function VerbSettings(props) {
         "4th infinitive", "5th infinitive", "participles"];
     // console.log(checkboxes)
     let checkboxIds = checkboxes.map(el => el.replace(" ", "-"));
-    let checkboxIndexes = [
-        [...presentTenseIndexes.filter(x => !perfectIndexes.includes(x))],
-        [...presentTenseIndexes.filter(x => perfectIndexes.includes(x))],
-        [...pastTenseIndexes.filter(x => !perfectIndexes.includes(x))],
-        [...pastTenseIndexes.filter(x => perfectIndexes.includes(x))],
-        [...conditionalIndexes.filter(x => !perfectIndexes.includes(x))],
-        [...conditionalIndexes.filter(x => perfectIndexes.includes(x))],
-        [...imperativeIndexes.filter(x => !perfectIndexes.includes(x))],
-        [...imperativeIndexes.filter(x => perfectIndexes.includes(x))],
-        [...potentialIndexes.filter(x => !perfectIndexes.includes(x))],
-        [...potentialIndexes.filter(x => perfectIndexes.includes(x))],
-        [longFirstInfIndex], secondInfIndexes, thirdInfIndexes,
-        [fourthInfIndex], [fifthInfIndex], participlesIndexes
-        ];
-    console.log(checkboxIndexes)
-    let checkboxStates = checkboxIndexes.map(ci => props.formsOn.map((formOn, i) => ci.includes(i) ? formOn : 0)).map(el => el.reduce((a, b) => a + b) > 0);
+
     let tensesColumn = [];
     for (let i = 0; i < checkboxes.length; ++i) {
-        tensesColumn.push(<input type="checkbox" id={checkboxIds[i]} key={checkboxes[i]} checked={checkboxStates[i]}
-            onChange={() => props.onClick(checkboxIndexes[i], !checkboxStates[i])} />, <label htmlFor={checkboxIds[i]}>{checkboxes[i]}</label>, <br />);
+        tensesColumn.push(<input type="checkbox" id={checkboxIds[i]} key={checkboxes[i]} checked={props.checkboxStates[i]}
+            onChange={() => props.onClick(i, !props.checkboxStates[i])} />, <label htmlFor={checkboxIds[i]}>{checkboxes[i]}</label>, <br />);
     }
+
+    // const passiveRadios = (
+    //     <div onChange={(event) => props.changeRadio("passivitySettings", event.target.value)}>
+    //         <input type="radio" value="active" name="passivity" /> Only active
+    //         <br />
+    //         <input type="radio" value="passive" name="passivity" /> Only passive
+    //         <br />
+    //         <input type="radio" value="both" name="passivity" /> Active and Passive
+    //     </div>
+    // );
+
+    const passiveTexts = ["active", "passive", "both"]
+    const passiveLabels = ["only active", "only passive", "active and passive"]
+    const passiveRadios = (
+        <div onChange={(event) => props.changeRadio("passivitySettings", event.target.value)}>
+            {passiveTexts.map((el, i) => (
+                <div>
+                    <input type="radio" value={el} id={el} name="passive" checked={props.passivityState === el} />
+                    <label htmlFor={el}>{passiveLabels[i]}</label><br />
+                </div>
+            ))
+            }
+        </div>
+    );
+
+    const negativeTexts = ["positive", "negative", "both"]
+    const negativeLabels = ["only positive", "only negative", "Positive and negative"]
+    const negativeRadios = (
+        <div onChange={(event) => props.changeRadio("negativitySettings", event.target.value)}>
+            {negativeTexts.map((el, i) => (
+                <div>
+                    <input type="radio" value={el} id={el} name="negative" checked={props.negativityState === el} />
+                    <label htmlFor={el}>{negativeLabels[i]}</label><br />
+                </div>
+            ))
+            }
+        </div>
+    );
+
     return (
         <div className="card settings mx-auto">
             <div className="row">
                 <div className="col-sm-4">
                     {tensesColumn}
+                    <br />
+                    {passiveRadios}
+                    <br />
+                    {negativeRadios}
                 </div>
 
                 <div className="col-sm-4">

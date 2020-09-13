@@ -35,10 +35,8 @@ class WordManager extends React.Component {
                 data: this.props.top
             };
         }
-        console.log(currentData.keys.length,currentData.data)
         const wordIndex = Math.floor(Math.random() * currentData.keys.length);
         const word = currentData.keys[wordIndex];
-        console.log(word)
         // console.log(this.props.formsOn, this.props.formsOn.map(el => (el && el !== -1 ? el : 0)))
         const formsOnCount = this.props.formsOn.map(el => (el && el !== -1 ? el : 0)).reduce((a, b) => a + b);
         let formSubsetIndex = Math.floor(Math.random() * formsOnCount);
@@ -56,10 +54,10 @@ class WordManager extends React.Component {
             trueFormIndex++;
         }
 
-        console.log(formsOnCount, trueFormIndex);
+        // console.log(formsOnCount, trueFormIndex);
 
         let currentEntry = currentData.data[word];
-        console.log(currentEntry)
+        // console.log(currentEntry)
         this.setState({
             currentWord: word,
             currentFormName: this.props.forms[trueFormIndex],
