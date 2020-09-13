@@ -17,21 +17,24 @@ function getTextWidth(inputText, font) {
   console.log(formattedWidth);
 }
 
+const nounPath=process.env.PUBLIC_URL + "/nouns"
+const verbPath=process.env.PUBLIC_URL +"/verbs"
+
 const routing = (
   <Router>
     <div>
       <ul>
         <li>
-          <NavLink activeClassName="active" to="/nouns">Nouns</NavLink>
+          <NavLink activeClassName="active" to={nounPath}>Nouns</NavLink>
         </li>
         <li>
-          <NavLink activeClassName="active" to="/verbs">Verbs</NavLink>
+          <NavLink activeClassName="active" to={verbPath}>Verbs</NavLink>
         </li>
       </ul>
       <Switch>
-        <Route exact path="/">{<Redirect to="/nouns" />}</Route>
-        <Route path="/nouns" component={Nouns} />
-        <Route path="/verbs" component={Verbs} />
+        <Route exact path={process.env.PUBLIC_URL}>{<Redirect to={nounPath} />}</Route>
+        <Route path={nounPath} component={Nouns} />
+        <Route path={verbPath} component={Verbs} />
         <Route component={Notfound} />
       </Switch>
     </div>
