@@ -55,7 +55,7 @@ class Nouns extends React.Component {
     render() {
         return (
             <div>
-                <WordManager top={topNouns} kotus={kotusNouns} forms={this.forms}
+                <WordManager top={topNouns} kotus={kotusNouns} forms={this.forms} generateForm={generateNounForm}
                     currentData={this.state.currentData} formsOn={this.state.formsOn} mode={this.mode}/>
                 <NounSettings forms={this.forms} formsOn={this.state.formsOn} onClick={this.switchOnOff} />
             </div>
@@ -111,6 +111,10 @@ function CheckboxRow(props) {
             </div>
         </div>
     )
+}
+
+function generateNounForm(d,i){
+    return d[i];
 }
 
 function NounSettings(props) {

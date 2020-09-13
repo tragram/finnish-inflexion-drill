@@ -77,7 +77,7 @@ def generate_kotus_nouns():
     with open('data/kotus_nouns.json','w') as out_file:
         json.dump(output,out_file)
 
-def generator(n,ignore,condition,filename,noun):
+def generator(n,to_ignore,condition,filename,noun):
     output={}
     counter=0
     for word in most_frequent_words:
@@ -85,26 +85,28 @@ def generator(n,ignore,condition,filename,noun):
         try:
             if condition(w):
                 # print(w)
-                if ignore==0:
-                    output[word]=noun_record(w) if noun else verb_record(w)
-                    counter+=1
-                    if counter>=n:
-                        break
+                if to_ignore==0:
+                    result=noun_record(w) if noun else verb_record(w)
+                    if result is not None:
+                        output[word]=result
+                        counter+=1
+                        if counter>=n:
+                            break
                 else:
-                    ignore-=1
+                    to_ignore-=1
         except Exception as e:
             print(e)
     # print(output)
     with open(f'data/{filename}.json','w') as out_file:
         json.dump(output,out_file)
 
-def generate_top_nouns(n,ignore=50):
+def generate_top_nouns(n,ignore_first=50):
     condition=lambda w:w is not None and w['pos']=='noun' and w['heads'][0]['template_name']=='fi-noun'
-    generator(n,ignore,condition,'top_nouns',True)
+    generator(n,ignore_first,condition,'top_nouns',True)
 
-def generate_top_verbs(n,ignore=50):
+def generate_top_verbs(n,ignore_first=50):
     condition=lambda w:w is not None and w['pos']=='verb'
-    generator(n,ignore,condition,'top_verbs',False)
+    generator(n,ignore_first,condition,'top_verbs',False)
 
 # generate_top_nouns(1000)
 generate_top_verbs(1000)

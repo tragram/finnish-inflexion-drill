@@ -26,7 +26,7 @@ class WordManager extends React.Component {
         let currentData;
         if (this.props.currentData === 'kotus') {
             currentData = {
-                keys: this.Object.keys(this.props.kotus),
+                keys: Object.keys(this.props.kotus),
                 data: this.props.kotus
             };
         } else {
@@ -35,9 +35,11 @@ class WordManager extends React.Component {
                 data: this.props.top
             };
         }
+        console.log(currentData.keys.length,currentData.data)
         const wordIndex = Math.floor(Math.random() * currentData.keys.length);
         const word = currentData.keys[wordIndex];
-        console.log(this.props.formsOn, this.props.formsOn.map(el => (el && el !== -1 ? el : 0)))
+        console.log(word)
+        // console.log(this.props.formsOn, this.props.formsOn.map(el => (el && el !== -1 ? el : 0)))
         const formsOnCount = this.props.formsOn.map(el => (el && el !== -1 ? el : 0)).reduce((a, b) => a + b);
         let formSubsetIndex = Math.floor(Math.random() * formsOnCount);
         let trueFormIndex = 0;
@@ -54,17 +56,17 @@ class WordManager extends React.Component {
             trueFormIndex++;
         }
 
-        console.log(formsOnCount, formSubsetIndex, trueFormIndex);
+        console.log(formsOnCount, trueFormIndex);
 
-        const currentEntry = currentData.data[word];
+        let currentEntry = currentData.data[word];
+        console.log(currentEntry)
         this.setState({
             currentWord: word,
             currentFormName: this.props.forms[trueFormIndex],
-            currentAnswer: currentEntry.forms[trueFormIndex],
+            currentAnswer: this.props.generateForm(currentEntry.forms,trueFormIndex),
             currentTranslation: currentEntry.tran,
             currentKotusType: currentEntry.kotus
         })
-        console.log(currentEntry.forms[trueFormIndex]);
     }
 
     onCorrectAnswer = () => {

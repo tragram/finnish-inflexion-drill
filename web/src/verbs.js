@@ -86,10 +86,10 @@ function generateVerbForm(d, i) {
             console.log("Error - perfect and not one of the expected tenses!")
         }
 
-        if (((i - offset) % 7 < 3 && !imperative) || (i - offset) % 6 < 2 && imperative) {
+        if (((i - offset) % 7 < 3 && !imperative) || ((i - offset) % 6 < 2 && imperative)) {
             //singular
             participleRet = activePastParticiple;
-        } else if (((i - offset) % 7 < 6 && !imperative) || (i - offset) % 6 < 5 && imperative) {
+        } else if (((i - offset) % 7 < 6 && !imperative) || ((i - offset) % 6 < 5 && imperative)) {
             participleRet = activeParticiplePlural;
         } else {
             participleRet = passivePastParticiple;
@@ -212,7 +212,7 @@ function verbForms() {
     for (let i = 0; i < tensesMoods.length; ++i) {
         for (let k = 0; k < 2; ++k) {
             for (let j = 0; j < persons.length; ++j) {
-                if (tensesMoods.slice(0, "imperative".length) === "imperative" && j === 0) { continue; }
+                if (tensesMoods[i].slice(0, "imperative".length) === "imperative" && j === 0) { console.log(tensesMoods);continue; }
                 let ending = k === 1 ? " negative" : "";
                 forms.push(tensesMoods[i] + " " + persons[j] + ending);
             }
@@ -231,6 +231,7 @@ class Verbs extends React.Component {
     constructor(props) {
         super(props);
         this.forms = verbForms();
+        console.log(this.forms)
         this.mode = "verbs";
         this.formSettingsName = this.mode + "On";
         this.dataSettingsName = this.mode + "Data";
@@ -240,11 +241,11 @@ class Verbs extends React.Component {
         };
     }
 
-    switchOnOff = (indexes) => {
+    switchOnOff = (indexes, value) => {
         if (!Array.isArray(indexes)) {
             indexes = [indexes];
         }
-        const afterChange = this.state.formsOn.map((el, i) => indexes.includes(i) && el !== -1 ? (!el) : el);
+        const afterChange = this.state.formsOn.map((el, i) => indexes.includes(i) ? value : el);
         // console.log(indexes)
         if (afterChange.map(el => ((el && el !== -1) ? el : 0)).reduce((a, b) => a + b) > 0) {
             this.setState({
@@ -263,21 +264,67 @@ class Verbs extends React.Component {
         // for (let i = 0; i < 160; ++i) {
         //     text.push(generateVerbForm(topVerbs["kuulua"]["forms"], i));
         // }
+        // console.log(text)
         // text.map((el, index) => (<p>{el}</p>))
         return (
-            <WordManager top={topVerbs} kotus={kotusVerbs} forms={this.forms}
-            currentData={this.state.currentData} formsOn={this.state.formsOn} mode={this.mode}/>
-            // <div>
-            //     <WordManager top={topVerbs} kotus={kotusVerbs} forms={this.forms}
-            //         currentData={this.state.currentData} formsOn={this.state.formsOn} mode={this.mode}/>
-            //     <VerbSettings forms={this.forms} formsOn={this.state.formsOn} onClick={this.switchOnOff} />
-            // </div>
+            <div>
+                <WordManager top={topVerbs} kotus={kotusVerbs} forms={this.forms} generateForm={generateVerbForm}
+                    currentData={this.state.currentData} formsOn={this.state.formsOn} mode={this.mode} />
+                <VerbSettings onClick={this.switchOnOff} forms={this.forms} formsOn={this.state.formsOn} />
+            </div>
         )
     }
 }
 
 function VerbSettings(props) {
+    let checkboxes = [...tensesMoods, "1st long infinitive", "2nd infinitive", "3rd infinitive",
+        "4th infinitive", "5th infinitive", "participles"];
+    // console.log(checkboxes)
+    let checkboxIds = checkboxes.map(el => el.replace(" ", "-"));
+    let checkboxIndexes = [
+        [...presentTenseIndexes.filter(x => !perfectIndexes.includes(x))],
+        [...presentTenseIndexes.filter(x => perfectIndexes.includes(x))],
+        [...pastTenseIndexes.filter(x => !perfectIndexes.includes(x))],
+        [...pastTenseIndexes.filter(x => perfectIndexes.includes(x))],
+        [...conditionalIndexes.filter(x => !perfectIndexes.includes(x))],
+        [...conditionalIndexes.filter(x => perfectIndexes.includes(x))],
+        [...imperativeIndexes.filter(x => !perfectIndexes.includes(x))],
+        [...imperativeIndexes.filter(x => perfectIndexes.includes(x))],
+        [...potentialIndexes.filter(x => !perfectIndexes.includes(x))],
+        [...potentialIndexes.filter(x => perfectIndexes.includes(x))],
+        [longFirstInfIndex], secondInfIndexes, thirdInfIndexes,
+        [fourthInfIndex], [fifthInfIndex], participlesIndexes
+        ];
+    console.log(checkboxIndexes)
+    let checkboxStates = checkboxIndexes.map(ci => props.formsOn.map((formOn, i) => ci.includes(i) ? formOn : 0)).map(el => el.reduce((a, b) => a + b) > 0);
+    let tensesColumn = [];
+    for (let i = 0; i < checkboxes.length; ++i) {
+        tensesColumn.push(<input type="checkbox" id={checkboxIds[i]} key={checkboxes[i]} checked={checkboxStates[i]}
+            onChange={() => props.onClick(checkboxIndexes[i], !checkboxStates[i])} />, <label htmlFor={checkboxIds[i]}>{checkboxes[i]}</label>, <br />);
+    }
+    return (
+        <div className="card settings mx-auto">
+            <div className="row">
+                <div className="col-sm-4">
+                    {tensesColumn}
+                </div>
 
+                <div className="col-sm-4">
+                    <dl>
+                        <li>press ',' to show the next letter</li>
+                        <li>press '.' to show the answer</li>
+                        <li>press '/' to go generate a different word</li>
+                        {/* <li>press ';' to generate a different form of the same word</li> */}
+                    </dl>
+                </div>
+                <div className="col-sm-3">
+                    <a href="https://uusikielemme.fi/finnish-grammar/" target="_blank" rel='noopener noreferrer'>Learn more at Uusi kielemme
+          <img src="https://uusikielemme.fi/wp-content/uploads/new-u.png" style={{ "width": "100px" }} />
+           (not affiliated in any way)</a>
+                </div>
+            </div>
+        </div>
+    )
 }
 
 export default Verbs
