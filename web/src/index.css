@@ -216,9 +216,14 @@ code {
   z-index:1; */
 }
 
+ul#nav li {
+    display:inline;
+  }
+
 ::placeholder {
     overflow: visible;
 }
+
 
 .settings {
     width: 1210px;
