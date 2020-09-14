@@ -2,7 +2,7 @@
     --finnish-blue: #002f6c;
     --finnish-red: #C8102E;
     --finnish-yellow: #FFC72C;
-    --border-rad: 15px;
+    --border-rad: 10px;
 }
 
 body {
@@ -15,6 +15,10 @@ body {
 
 code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+.container{
+    max-width: 1400px;
 }
 
 .row+.row {
@@ -62,7 +66,7 @@ code {
     font-family: Comfortaa;
     margin-top: 10px;
     /* margin-bottom: 10px; */
-    max-width: 600px;
+    /* max-width: 600px; */
     min-width: 100px;
     word-break: break-all;
     white-space: normal;
@@ -70,19 +74,30 @@ code {
 
 .rcard {
     /* font-size: 1.5em; */
+    /* min-width: 600px; */
     font-weight: 400;
     height: 100px;
     padding: 0;
-    margin-left: 5px;
+    /* margin-left: 5px; */
     border-radius: 0 var(--border-rad) var(--border-rad) 0;
+}
+
+.no-l-padding{
+    padding-left:0;
+    padding-right:5px;
+}
+
+.no-r-padding{
+    padding-left:5px;
+    padding-right:0;
 }
 
 .lcard {
     font-size: 100px;
     font-weight: 700;
     height: 320px;
-    margin-left: -5px;
-    margin-right: 5px;
+    /* margin-left: -5px; */
+    /* margin-right: 5px; */
     border-radius: var(--border-rad) 0 0 var(--border-rad);
 }
 
@@ -133,6 +148,11 @@ code {
     /*4px 0 0 4px;*/
 }
 
+.input-row{
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
 /* .input-card{
   height:100px;
   width: 1210px;
@@ -141,9 +161,10 @@ code {
 } */
 
 .word-input-flex {
-    flex: 0 1 1220px;
+    /* flex: 0 1 1220px; */
     /* max-width: 1210px; */
-    padding: 0 5px 0 5px;
+    width:100%;
+    padding: 0 0 0 0;
     /* min-width: 600px; */
 }
 

@@ -12,15 +12,14 @@ class UserIO extends React.Component {
             return resizedFontSize;
         }
         return (
-            <div className="word-flag">
+            <div className="container">
                 <div /*class="card gray"*/>
                     <div className="row card-flex">
-
-                        <div className="l-stretch">
+                        <div className="col-sm-12 col-xl-6 no-l-padding">
                             <FinnishWord finnish_word={this.props.currentWord} fontSize={computeFontSize(this.props.currentWord, 100, 550)} />
                         </div>
 
-                        <div className="r-stretch">
+                        <div className="col-sm-12 col-xl-6 no-r-padding">
                             <RightCard text={this.props.currentTranslation} fontSize={computeFontSize(this.props.currentTranslation, 30, 550)} cls='blue' image={process.env.PUBLIC_URL + "/img/translation.svg"} />
                             <RightCard text={this.props.currentFormName} fontSize={computeFontSize(this.props.currentFormName, 30, 550)} cls='red' image={process.env.PUBLIC_URL + "/img/target.svg"} />
                             <RightCard text={this.props.currentKotusType} fontSize={computeFontSize(this.props.currentKotusType, 30, 550)} cls='yellow' image={process.env.PUBLIC_URL + "/img/kotus_type.svg"} />
@@ -31,7 +30,7 @@ class UserIO extends React.Component {
                     </div>
 
                 </div>
-                <div className="card-flex">
+                <div className="row card-flex input-row">
                     <UserTextInput onCorrectAnswer={this.props.onCorrectAnswer} currentWord={this.props.currentWord}
                         currentAnswer={this.props.currentAnswer} />
                 </div>
@@ -89,7 +88,7 @@ class UserTextInput extends React.Component {
     }
     render() {
         return (
-            <div className="word-input-flex">
+            <div className="word-input-flex col-12">
                 <input type="text" className={"word-input " + this.state.textInputBG}
                     placeholder={"type '" + this.props.currentWord + "' in the form specified"} onKeyPress={this.handleKeyPress}
                     onChange={(evt) => { this.setState({ value: evt.target.value.replace(/[^A-Za-zäöÄÖšž]/g, "") }); }}
