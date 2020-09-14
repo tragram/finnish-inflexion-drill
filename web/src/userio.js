@@ -1,28 +1,27 @@
 import React from 'react'
+
+
 class UserIO extends React.Component {
     render() {
-        // for(let i=100;i>=20;--i){
-        //   getTextWidth("päähenkilö",i+"px Comfortaa");
+        // function computeFontSize(text, defaultSize, textSpace) {
+        //     const l = text.length;
+        //     const coeffs = [0.885, -0.0811]
+        //     let resizedFontSize = Math.max(Math.min(defaultSize, (textSpace / l + coeffs[1]) / coeffs[0]), defaultSize / 4);
+        //     // console.log("Approximate width default "+(coeffs[0]*defaultSize+coeffs[1])*l+" changed to size "+resizedFontSize+"px and resulting size is "+(coeffs[0]*resizedFontSize+coeffs[1])*l)
+        //     return resizedFontSize;
         // }
-        function computeFontSize(text, defaultSize, textSpace) {
-            const l = text.length;
-            const coeffs = [0.885, -0.0811]
-            let resizedFontSize = Math.max(Math.min(defaultSize, (textSpace / l + coeffs[1]) / coeffs[0]), defaultSize / 4);
-            // console.log("Approximate width default "+(coeffs[0]*defaultSize+coeffs[1])*l+" changed to size "+resizedFontSize+"px and resulting size is "+(coeffs[0]*resizedFontSize+coeffs[1])*l)
-            return resizedFontSize;
-        }
         return (
             <div className="container">
                 <div /*class="card gray"*/>
                     <div className="row card-flex">
-                        <div className="col-sm-12 col-xl-6 no-l-padding">
-                            <FinnishWord finnish_word={this.props.currentWord} fontSize={computeFontSize(this.props.currentWord, 100, 550)} />
+                        <div className="col-sm-12 col-xl-6 no-l-padding" id="left">
+                            <FinnishWord finnish_word={this.props.currentWord} fontSize={computeFontSize(this.props.currentWord, 5, 40)} />
                         </div>
 
-                        <div className="col-sm-12 col-xl-6 no-r-padding">
-                            <RightCard text={this.props.currentTranslation} fontSize={computeFontSize(this.props.currentTranslation, 30, 550)} cls='blue' image={process.env.PUBLIC_URL + "/img/translation.svg"} />
-                            <RightCard text={this.props.currentFormName} fontSize={computeFontSize(this.props.currentFormName, 30, 550)} cls='red' image={process.env.PUBLIC_URL + "/img/target.svg"} />
-                            <RightCard text={this.props.currentKotusType} fontSize={computeFontSize(this.props.currentKotusType, 30, 550)} cls='yellow' image={process.env.PUBLIC_URL + "/img/kotus_type.svg"} />
+                        <div className="col-sm-12 col-xl-6 no-r-padding" id="right">
+                            <RightCard text={this.props.currentTranslation} fontSize={computeFontSize(this.props.currentTranslation, 1.5, 40)} cls='blue' image={process.env.PUBLIC_URL + "/img/translation.svg"} />
+                            <RightCard text={this.props.currentFormName} fontSize={computeFontSize(this.props.currentFormName, 1.5, 40)} cls='red' image={process.env.PUBLIC_URL + "/img/target.svg"} />
+                            <RightCard text={this.props.currentKotusType} fontSize={computeFontSize(this.props.currentKotusType, 1.5, 40)} cls='yellow' image={process.env.PUBLIC_URL + "/img/kotus_type.svg"} />
                             {/* https://en.wiktionary.org/wiki/Appendix:Finnish_nominal_inflection/nuoripari
                 https://en.wiktionary.org/wiki/Appendix:Finnish_conjugation */}
                         </div>
@@ -98,31 +97,94 @@ class UserTextInput extends React.Component {
     }
 }
 
-function FinnishWord(props) {
-    const style = {
-        fontSize: props.fontSize + "px",
-    }
-    return (
-        <div className="card word-card lcard card-text ltext"><p className="" style={style}>{props.finnish_word}</p></div>
-    )
+// function computeFontSize(text, defaultSize, textSpace) {
+//     const l = text.length;
+//     const coeffs = [0, 0]
+//     let resizedFontSize = Math.max(Math.min(defaultSize, (textSpace / l + coeffs[1])), defaultSize / 4);
+//     return resizedFontSize;
+// }
+
+function computeFontSize(text, defaultSize, textSpace) {
+    const l = text.length;
+    const coeffs = [0.885, -0.0811]
+    let resizedFontSize = Math.max(Math.min(defaultSize, (textSpace / l + coeffs[1]) / coeffs[0]), defaultSize / 4);
+    // console.log("Approximate width default "+(coeffs[0]*defaultSize+coeffs[1])*l+" changed to size "+resizedFontSize+"px and resulting size is "+(coeffs[0]*resizedFontSize+coeffs[1])*l)
+    return resizedFontSize;
 }
 
-function RightCard(props) {
-    const style = {
-        fontSize: props.fontSize + "px",
+class FinnishWord extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = { width: 0, }
     }
-    return (
-        <div className={"container card word-card rcard " + props.cls}>
-            <div className="row no-gutters align-items-center h-100">
-                <div className="col-sm-1">
-                    <img className="rcard-image" alt="" src={props.image} />
-                </div>
-                <div className="col-sm-11 ">
-                    <p className="card-text rtext" style={style}>{props.text}</p>
+
+    componentDidMount() {
+        this.setState({ width: document.getElementById('left').clientWidth });
+        // console.log("width: ",document.getElementById('left').clientWidth);
+    }
+
+    resize = () => this.setState({ width: document.getElementById('left').clientWidth });
+
+    componentDidMount() {
+        window.addEventListener('resize', this.resize)
+        this.resize()
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.resize)
+    }
+
+    render() {
+        const style = {
+            fontSize: computeFontSize(this.props.finnish_word, 80, this.state.width) + "px",
+        }
+        return (
+            <div className="card word-card lcard card-text ltext"><p className="" style={style}>{this.props.finnish_word}</p></div>
+        )
+    }
+
+}
+
+class RightCard extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = { width: 0, }
+    }
+
+    componentDidMount() {
+        this.setState({ width: document.getElementById('left').clientWidth });
+        // console.log("width: ",document.getElementById('left').clientWidth);
+    }
+
+    resize = () => this.setState({ width: document.getElementById('left').clientWidth });
+
+    componentDidMount() {
+        window.addEventListener('resize', this.resize)
+        this.resize()
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.resize)
+    }
+
+    render() {
+        const style = {
+            fontSize: computeFontSize(this.props.text, 30, this.state.width) + "px",
+        }
+
+        return (
+            <div className={"container card word-card rcard " + this.props.cls}>
+                <div className="row no-gutters align-items-center h-100">
+                    <div className="col-sm-1" style={{minWidth:"100px"}}>
+                        <img className="rcard-image" alt="" src={this.props.image} />
+                    </div>
+                    <div className="col" style={{flexWrap:"nowrap"}}>
+                        <p className="card-text rtext" style={style}>{this.props.text}</p>
+                    </div>
                 </div>
             </div>
-        </div>
-    )
+        )
+    }
 }
 
 export default UserIO
