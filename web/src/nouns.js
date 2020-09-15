@@ -10,10 +10,10 @@ const cases = ['nominative', 'genitive', 'partitive',
     'inessive (-ssA)', 'elative (-stA)', 'illative (-hVn)',
     'adessive (-llA)', 'ablative (-ltA)', 'allative (-lle)',
     'essive (-nA)', 'translative (-ksi)',
-    'instructive (-in)', 'abessive (-ttA)', 'comitative (-ne)'];
+    'abessive (-ttA)','instructive (-in)', 'comitative (-ne)'];
 //nominative sg is trivial and accusative officially does not exist
 // and instructive+comitative is only plural
-const validSgCases = [ALWAYS_INVALID, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ALWAYS_INVALID, 1, ALWAYS_INVALID];
+const validSgCases = [ALWAYS_INVALID, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,ALWAYS_INVALID, ALWAYS_INVALID];
 const validPlCases = cases.map(() => 1)
 
 // const cases_singular = [...cases.slice(2, 12), cases[13]]
