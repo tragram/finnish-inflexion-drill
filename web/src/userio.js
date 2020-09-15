@@ -174,6 +174,13 @@ class RightCard extends React.Component {
 
         return (
             <div className={"container card word-card rcard " + this.props.cls}>
+                <div style={{height:"100px"}}>
+                        <img style={{ display: "inline-block", width: "100px", marginTop: "-92px" }} className="rcard-image" alt="" src={this.props.image} />
+                    <div style={{ display: "inline-block", width: this.state.width - 120 + "px" }}>
+                        <p className="card-text rtext" style={style}>{this.props.text}</p>
+                    </div>
+                </div>
+                {/*                 
                 <div className="row no-gutters align-items-center h-100">
                     <div className="col-sm-1" style={{minWidth:"100px"}}>
                         <img className="rcard-image" alt="" src={this.props.image} />
@@ -181,7 +188,7 @@ class RightCard extends React.Component {
                     <div className="col" style={{flexWrap:"nowrap"}}>
                         <p className="card-text rtext" style={style}>{this.props.text}</p>
                     </div>
-                </div>
+                </div> */}
             </div>
         )
     }
