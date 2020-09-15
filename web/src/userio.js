@@ -180,15 +180,6 @@ class RightCard extends React.Component {
                         <p className="card-text rtext" style={style}>{this.props.text}</p>
                     </div>
                 </div>
-                {/*                 
-                <div className="row no-gutters align-items-center h-100">
-                    <div className="col-sm-1" style={{minWidth:"100px"}}>
-                        <img className="rcard-image" alt="" src={this.props.image} />
-                    </div>
-                    <div className="col" style={{flexWrap:"nowrap"}}>
-                        <p className="card-text rtext" style={style}>{this.props.text}</p>
-                    </div>
-                </div> */}
             </div>
         )
     }

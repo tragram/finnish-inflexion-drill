@@ -2,6 +2,7 @@ import React from 'react'
 import WordManager from './word_manager'
 import kotusVerbs from './kotus_verbs.json';
 import topVerbs from './top_verbs.json'
+import Info from './info';
 
 const persons = ["1st singular", "2nd singular", "3rd singular", "1st plural", "2nd plural", "3rd plural", "passive"];
 const tensesMoods = ["present", "perfect", "past", "pluperfect", "conditional",
@@ -328,8 +329,8 @@ function VerbSettings(props) {
 
     let tensesColumn = [];
     for (let i = 0; i < checkboxes.length; ++i) {
-        tensesColumn.push(<input type="checkbox" id={checkboxIds[i]} key={checkboxes[i]} checked={props.checkboxStates[i]}
-            onChange={() => props.onClick(i, !props.checkboxStates[i])} />, <label htmlFor={checkboxIds[i]}>{checkboxes[i]}</label>, <br />);
+        tensesColumn.push(<div><input type="checkbox" id={checkboxIds[i]} key={checkboxes[i]} checked={props.checkboxStates[i]}
+            onChange={() => props.onClick(i, !props.checkboxStates[i])} /> <label htmlFor={checkboxIds[i]}>{checkboxes[i]}</label></div>, <br />);
     }
 
     // const passiveRadios = (
@@ -357,7 +358,7 @@ function VerbSettings(props) {
     );
 
     const negativeTexts = ["positive", "negative", "both"]
-    const negativeLabels = ["only positive", "only negative", "Positive and negative"]
+    const negativeLabels = ["only positive", "only negative", "positive and negative"]
     const negativeRadios = (
         <div onChange={(event) => props.changeRadio("negativitySettings", event.target.value)}>
             {negativeTexts.map((el, i) => (
@@ -371,28 +372,20 @@ function VerbSettings(props) {
     );
 
     return (
-        <div className="card settings mx-auto">
-            <div className="row">
-                <div className="col-sm-4">
-                    {tensesColumn}
-                    <br />
-                    {passiveRadios}
-                    <br />
-                    {negativeRadios}
+        <div className="container">
+            <div className="row card-flex align-items-start">
+                <div className="col-lg-6 no-l-padding">
+                    <div className="card settings">
+                        {tensesColumn}
+                        <br />
+                        {passiveRadios}
+                        <br />
+                        {negativeRadios}
+                    </div>
                 </div>
 
-                <div className="col-sm-4">
-                    <dl>
-                        <li>press ',' to show the next letter</li>
-                        <li>press '.' to show the answer</li>
-                        <li>press '/' to go generate a different word</li>
-                        {/* <li>press ';' to generate a different form of the same word</li> */}
-                    </dl>
-                </div>
-                <div className="col-sm-3">
-                    <a href="https://uusikielemme.fi/finnish-grammar/" target="_blank" rel='noopener noreferrer'>Learn more at Uusi kielemme
-          <img src="https://uusikielemme.fi/wp-content/uploads/new-u.png" style={{ "width": "100px" }} />
-           (not affiliated in any way)</a>
+                <div className="col-lg-6 no-r-padding">
+                    <Info />
                 </div>
             </div>
         </div>

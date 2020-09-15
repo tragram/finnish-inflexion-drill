@@ -2,14 +2,15 @@ import React from 'react'
 import WordManager from './word_manager'
 import kotusNouns from './kotus_nouns.json';
 import topNouns from './top_nouns.json'
+import Info from './info';
 
 const ALWAYS_INVALID = -1;
 const plurality = ['singular', 'plural'];
 const cases = ['nominative', 'genitive', 'partitive',
-'inessive (-ssA)', 'elative (-stA)', 'illative (-hVn)',
-'adessive (-llA)', 'ablative (-ltA)', 'allative (-lle)',
-'essive (-nA)', 'translative (-ksi)',
-'instructive (-in)', 'abessive (-ttA)', 'comitative (-ne)'];
+    'inessive (-ssA)', 'elative (-stA)', 'illative (-hVn)',
+    'adessive (-llA)', 'ablative (-ltA)', 'allative (-lle)',
+    'essive (-nA)', 'translative (-ksi)',
+    'instructive (-in)', 'abessive (-ttA)', 'comitative (-ne)'];
 //nominative sg is trivial and accusative officially does not exist
 // and instructive+comitative is only plural
 const validSgCases = [ALWAYS_INVALID, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ALWAYS_INVALID, 1, ALWAYS_INVALID];
@@ -56,7 +57,7 @@ class Nouns extends React.Component {
         return (
             <div>
                 <WordManager top={topNouns} kotus={kotusNouns} forms={this.forms} generateForm={generateNounForm}
-                    currentData={this.state.currentData} formsOn={this.state.formsOn} mode={this.mode}/>
+                    currentData={this.state.currentData} formsOn={this.state.formsOn} mode={this.mode} />
                 <NounSettings forms={this.forms} formsOn={this.state.formsOn} onClick={this.switchOnOff} />
             </div>
         )
@@ -100,20 +101,20 @@ function CheckboxRow(props) {
 
     return (
         <div className="row align-items-center">
-            <div className="col-sm-6">
+            <div className="col-6">
                 {props.form}
             </div>
-            <div className="col-sm-3">
+            <div className="col-3">
                 {generateCheckbox(props.form + "-sg", props.onSingular, () => props.onClick(props.index))}
             </div>
-            <div className="col-sm-3">
+            <div className="col-3">
                 {generateCheckbox(props.form + "-pl", props.onPlural, () => props.onClick(props.index + cases.length))}
             </div>
         </div>
     )
 }
 
-function generateNounForm(d,i){
+function generateNounForm(d, i) {
     return d[i];
 }
 
@@ -140,23 +141,23 @@ function NounSettings(props) {
     let allPluralOff = pluralCasesOn.reduce((a, b) => a && (!b || b === -1), true);
 
     return (
-        <div className="card settings mx-auto">
-            <div className="row">
-                <div className="col-sm-5">
+        <div className="container">
+            <div className="row card-flex align-items-start">
+                <div className="col-md-6 no-l-padding settings">
                     <div className="row">
-                        <div className="col-sm-6">
+                        <div className="col-6">
                             {//TODO: settings image
                             }
                         </div>
-                        <div className="col-sm-3 control-group">
+                        <div className="col-3 control-group">
                             <input type="checkbox" id="sg_cb" onChange={switchAll(true)}
                                 checked={allSingularOn} />
-                            <label htmlFor="sg_cb">Singular</label>
+                            <label htmlFor="sg_cb">&nbsp;Singular</label>
                         </div>
-                        <div className="col-sm-3">
+                        <div className="col-3">
                             <input type="checkbox" id="pl_cb" onChange={switchAll(false)}
                                 checked={allPluralOn} />
-                            <label htmlFor="pl_cb">Plural</label>
+                            <label htmlFor="pl_cb">&nbsp;Plural</label>
                         </div>
                     </div>
 
@@ -165,18 +166,9 @@ function NounSettings(props) {
                         form={form.slice("Singular ".length)} onClick={props.onClick} index={index}
                         onSingular={singularCasesOn[index]} onPlural={pluralCasesOn[index]} />)}
                 </div>
-                <div className="col-sm-4">
-                    <dl>
-                        <li>press ',' to show the next letter</li>
-                        <li>press '.' to show the answer</li>
-                        <li>press '/' to go generate a different word</li>
-                        {/* <li>press ';' to generate a different form of the same word</li> */}
-                    </dl>
-                </div>
-                <div className="col-sm-3">
-                    <a href="https://uusikielemme.fi/finnish-grammar/" target="_blank" rel='noopener noreferrer'>Learn more at Uusi kielemme
-          <img src="https://uusikielemme.fi/wp-content/uploads/new-u.png" style={{ "width": "100px" }} />
-           (not affiliated in any way)</a>
+
+                <div className="col-md-6 no-r-padding">
+                    <Info />
                 </div>
             </div>
         </div>

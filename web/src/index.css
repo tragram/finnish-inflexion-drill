@@ -226,13 +226,13 @@ ul#nav li {
 
 
 .settings {
-    width: 1210px;
+    /* width: 1210px; */
     background-color: #3b3434;
     border-radius: var(--border-rad);
     padding: 40px;
     font-family: Comfortaa;
     color: white;
-    margin-top: 20px;
+    /* margin-top: 20px; */
     margin-bottom: 20px;
 }
 
