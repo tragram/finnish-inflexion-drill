@@ -81,7 +81,7 @@ class UserTextInput extends React.Component {
             this.setState({ value: newValue });
         } else if (event.key === '.') {
             this.setState({ value: this.props.currentAnswer[0] });
-        } else if (event.key === '/') {
+        } else if (event.key === '/'||event.key === '-') {
             this.props.onCorrectAnswer();
         }
     }
