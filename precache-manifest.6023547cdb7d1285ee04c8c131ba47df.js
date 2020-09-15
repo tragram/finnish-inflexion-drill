@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "3f722ab6eac3380a82f1974489eeea04",
+    "revision": "63b6303462cbe92d2954ee01aa6b3de8",
     "url": "/finnish-inflexion-drill/index.html"
   },
   {
-    "revision": "950cc5c52aeb3ebf6c20",
+    "revision": "e352e24805d45ea5d1d1",
     "url": "/finnish-inflexion-drill/static/css/main.711f6f5a.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/finnish-inflexion-drill/static/js/2.8b1b521d.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "950cc5c52aeb3ebf6c20",
-    "url": "/finnish-inflexion-drill/static/js/main.62b41948.chunk.js"
+    "revision": "e352e24805d45ea5d1d1",
+    "url": "/finnish-inflexion-drill/static/js/main.e4a6fc4a.chunk.js"
   },
   {
     "revision": "10bffad081f8d88b7a89",
