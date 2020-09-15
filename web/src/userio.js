@@ -59,7 +59,7 @@ class UserTextInput extends React.Component {
 
     handleKeyPress = (event) => {
         if (event.key === 'Enter') {
-            if (this.props.currentAnswer.includes(this.state.value)) {
+            if (this.props.currentAnswer.includes(this.state.value.toLowerCase())) {
                 this.props.onCorrectAnswer();
                 this.flicker("green-bg");
                 this.setState({ value: "" });
