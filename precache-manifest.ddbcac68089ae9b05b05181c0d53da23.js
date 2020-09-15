@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "cd1361f718f70696fa8e476294306a45",
+    "revision": "378800f73a227e4f0e103706fa81498a",
     "url": "/finnish-inflexion-drill/index.html"
   },
   {
