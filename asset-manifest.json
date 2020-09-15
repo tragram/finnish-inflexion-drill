@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.css": "/finnish-inflexion-drill/static/css/main.31e8f3d2.chunk.css",
-    "main.js": "/finnish-inflexion-drill/static/js/main.3cc7fbc4.chunk.js",
-    "main.js.map": "/finnish-inflexion-drill/static/js/main.3cc7fbc4.chunk.js.map",
+    "main.css": "/finnish-inflexion-drill/static/css/main.711f6f5a.chunk.css",
+    "main.js": "/finnish-inflexion-drill/static/js/main.61e9bdcf.chunk.js",
+    "main.js.map": "/finnish-inflexion-drill/static/js/main.61e9bdcf.chunk.js.map",
     "runtime-main.js": "/finnish-inflexion-drill/static/js/runtime-main.f630f979.js",
     "runtime-main.js.map": "/finnish-inflexion-drill/static/js/runtime-main.f630f979.js.map",
     "static/js/2.8b1b521d.chunk.js": "/finnish-inflexion-drill/static/js/2.8b1b521d.chunk.js",
     "static/js/2.8b1b521d.chunk.js.map": "/finnish-inflexion-drill/static/js/2.8b1b521d.chunk.js.map",
     "index.html": "/finnish-inflexion-drill/index.html",
-    "precache-manifest.b6260b790c94d01ee5908bfb6f9c811a.js": "/finnish-inflexion-drill/precache-manifest.b6260b790c94d01ee5908bfb6f9c811a.js",
+    "precache-manifest.2456d7b33a69108ca4ad64f3fe49a34f.js": "/finnish-inflexion-drill/precache-manifest.2456d7b33a69108ca4ad64f3fe49a34f.js",
     "service-worker.js": "/finnish-inflexion-drill/service-worker.js",
-    "static/css/main.31e8f3d2.chunk.css.map": "/finnish-inflexion-drill/static/css/main.31e8f3d2.chunk.css.map",
+    "static/css/main.711f6f5a.chunk.css.map": "/finnish-inflexion-drill/static/css/main.711f6f5a.chunk.css.map",
     "static/js/2.8b1b521d.chunk.js.LICENSE.txt": "/finnish-inflexion-drill/static/js/2.8b1b521d.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.f630f979.js",
     "static/js/2.8b1b521d.chunk.js",
-    "static/css/main.31e8f3d2.chunk.css",
-    "static/js/main.3cc7fbc4.chunk.js"
+    "static/css/main.711f6f5a.chunk.css",
+    "static/js/main.61e9bdcf.chunk.js"
   ]
 }
