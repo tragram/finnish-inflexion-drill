@@ -9,8 +9,7 @@
         var url = l.pathname.split("/");
         var urlEnd = url[url.length - 1];
         if ((urlEnd === "nouns" || urlEnd === "verbs" || urlEnd === "about") && l.search === "") {
-            console.log("here")
-            l.replace(l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') + "/" + url[1].slice(0,-1) + "?p=" + urlEnd)
+            l.replace(l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') + "/" + url[1] + "?p=" + urlEnd)
         }
     </script>
 </head>
