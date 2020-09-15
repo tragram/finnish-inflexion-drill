@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Nouns from './nouns'
 import Verbs from './verbs'
-import Notfound from './notfound'
+import Notfound from './404'
 import './index.css';
 import * as serviceWorker from './serviceWorker';
 import {
@@ -10,18 +10,17 @@ import {
   Switch,
   Route,
   Link,
-  Redirect,
+  Redirect, 
 } from "react-router-dom";
-
 const nounPath = process.env.PUBLIC_URL + "/nouns"
 const verbPath = process.env.PUBLIC_URL + "/verbs"
 
 const routing = (
-  <Router>
+  <Router >
     <div>
       <nav className="navbar navbar-dark bg-dark navbar-expand-lg" >
-        <div class="navbar-header">
-          <a class="navbar-brand" href="#">Finnish Inflexion Drill</a>
+        <div className="navbar-header">
+          <a className="navbar-brand" href="#">Finnish Inflexion Drill</a>
         </div>
         <ul className="nav navbar-nav mr-auto">
           <li className="nav-item">
@@ -33,7 +32,7 @@ const routing = (
         </ul>
       </nav>
       <Switch>
-        <Route exact path={process.env.PUBLIC_URL}>{<Redirect to={nounPath} />}</Route>
+        <Route exact path={process.env.PUBLIC_URL+"/"}>{<Redirect to={nounPath} />}</Route>
         <Route path={nounPath} component={Nouns} />
         <Route path={verbPath} component={Verbs} />
         <Route component={Notfound} />
