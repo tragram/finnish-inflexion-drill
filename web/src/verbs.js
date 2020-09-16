@@ -214,7 +214,7 @@ function generateVerbForm(d, i) {
                     return negative[6] + d[potentialOffset + 8];
                 }
             }
-        } else if (i === longFirstInfIndex || i === fifthInfIndex) { console.log("l;"); return d[i - infinitivesIndexes[0] + 42][0]; } else {
+        } else if (i === longFirstInfIndex || i === fifthInfIndex) {return d[i - infinitivesIndexes[0] + 42][0]; } else {
             //nominal forms are all written in the JSON
             return d[i - infinitivesIndexes[0] + 42];
         }
@@ -226,7 +226,7 @@ function verbForms() {
     for (let i = 0; i < tensesMoods.length; ++i) {
         for (let k = 0; k < 2; ++k) {
             for (let j = 0; j < persons.length; ++j) {
-                if (tensesMoods[i].slice(0, "imperative".length) === "imperative" && j === 0) { console.log(tensesMoods); continue; }
+                if (tensesMoods[i].slice(0, "imperative".length) === "imperative" && j === 0) { continue; }
                 let ending = k === 1 ? " negative" : "";
                 forms.push(tensesMoods[i] + " " + persons[j] + ending);
             }
