@@ -24,7 +24,7 @@ def valid_noun_forms(word):
     # print(word['conjugation'])
     forms=[wiktfinnish.inflect(word['conjugation'][0],("","", form,"","")) for form in wiktfinnish.CASE_FORMS]
     # print(forms)
-    forms=[forms[0],*forms[2:13],[],forms[13],forms[14],*forms[16:]]
+    forms=[forms[0],*forms[2:12],forms[13],[],[],forms[14],*forms[16:]]
     # print(forms)
     if len(forms[0])==0:
         return None
