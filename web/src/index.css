@@ -17,7 +17,7 @@ code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
-.container{
+.container {
     max-width: 1400px;
 }
 
@@ -82,15 +82,7 @@ code {
     border-radius: 0 var(--border-rad) var(--border-rad) 0;
 }
 
-.no-l-padding{
-    padding-left:0;
-    padding-right:5px;
-}
 
-.no-r-padding{
-    padding-left:5px;
-    padding-right:0;
-}
 
 .lcard {
     font-size: 100px;
@@ -101,6 +93,12 @@ code {
     border-radius: var(--border-rad) 0 0 var(--border-rad);
 }
 
+.ltext {
+    line-height: 320px;
+    color: var(--finnish-blue);
+}
+
+
 .card-text {
     text-align: center;
     overflow: hidden;
@@ -108,11 +106,6 @@ code {
 
 .rtext {
     line-height: 100px;
-}
-
-.ltext {
-    line-height: 320px;
-    color: var(--finnish-blue);
 }
 
 .word-card.blue {
@@ -148,22 +141,22 @@ code {
     /*4px 0 0 4px;*/
 }
 
-.input-row{
+.input-row {
     padding-right: 10px;
     padding-left: 10px;
 }
 
 /* .input-card{
-  height:100px;
-  width: 1210px;
-  margin: 5px auto;
-  padding: 0 0 0 5px;
+    height:100px;
+    width: 1210px;
+    margin: 5px auto;
+    padding: 0 0 0 5px;
 } */
 
 .word-input-flex {
     /* flex: 0 1 1220px; */
     /* max-width: 1210px; */
-    width:100%;
+    width: 100%;
     padding: 0 0 0 0;
     /* min-width: 600px; */
 }
@@ -187,9 +180,9 @@ code {
     width: 100%;
     padding: 20px;
     /* background-image: url("../public/flag-uk.svg");
-  background-size: 50px;
-  background-repeat: no-repeat;
-  background-position: 99% 100%; */
+    background-size: 50px;
+    background-repeat: no-repeat;
+    background-position: 99% 100%; */
 }
 
 .black-bg {
@@ -205,6 +198,52 @@ code {
     background-color: #8BC98B;
 }
 
+@media only screen and (max-width: 1200px) {
+    .lcard {
+        height: 160px;
+        border-radius: var(--border-rad);
+    }
+
+    .rcard{
+        border-radius: var(--border-rad);
+    }
+    
+    .rcard-image{
+        border-radius: var(--border-rad) 0 0 var(--border-rad);
+    }
+    .ltext {
+        line-height: 160px;
+    }
+}
+
+@media only screen and (max-height: 720px) and (max-width:1200px) {
+    .word-card.blue {
+        display: none;
+    }
+    .word-card.yellow {
+        display: none;
+    }
+}
+
+.no-l-padding {
+    padding-left: 0;
+    padding-right: 5px;
+}
+
+.no-r-padding {
+    padding-left: 5px;
+    padding-right: 0;
+}
+
+@media only screen and (max-width:1200px) {
+.no-l-padding{
+    padding-right:0;
+}
+.no-r-padding{
+    padding-left:0;
+}
+}
+
 /* span{overflow:hidden;} */
 
 .wrongIndicator {
@@ -217,13 +256,12 @@ code {
 }
 
 ul#nav li {
-    display:inline;
-  }
+    display: inline;
+}
 
 ::placeholder {
     overflow: visible;
 }
-
 
 .settings {
     /* width: 1210px; */
@@ -236,9 +274,9 @@ ul#nav li {
     margin-bottom: 20px;
 }
 
-.active{
-    color:red;
- }
+.active {
+    color: red;
+}
 
 /* input[type=checkbox] {
     zoom: 2;
