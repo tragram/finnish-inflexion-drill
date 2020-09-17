@@ -90,7 +90,7 @@ class UserTextInput extends React.Component {
             <div className="word-input-flex col-12">
                 <input type="text" className={"word-input " + this.state.textInputBG}
                     placeholder={"type '" + this.props.currentWord + "' in the form specified"} onKeyPress={this.handleKeyPress}
-                    onChange={(evt) => { this.setState({ value: evt.target.value.replace(/[^A-Za-zäöÄÖšž]/g, "") }); }}
+                    onChange={(evt) => { this.setState({ value: evt.target.value.replace(/[^A-Za-zäöÄÖšž ]/g, "") }); }}
                     ref={this.props.reference} autoFocus value={this.state.value} />
             </div>
         )
@@ -120,15 +120,12 @@ class FinnishWord extends React.Component {
 
     componentDidMount() {
         this.setState({ width: document.getElementById('left').clientWidth });
+        window.addEventListener('resize', this.resize)
+        this.resize()
         // console.log("width: ",document.getElementById('left').clientWidth);
     }
 
     resize = () => this.setState({ width: document.getElementById('left').clientWidth });
-
-    componentDidMount() {
-        window.addEventListener('resize', this.resize)
-        this.resize()
-    }
 
     componentWillUnmount() {
         window.removeEventListener('resize', this.resize)
@@ -154,14 +151,11 @@ class RightCard extends React.Component {
     componentDidMount() {
         this.setState({ width: document.getElementById('left').clientWidth });
         // console.log("width: ",document.getElementById('left').clientWidth);
-    }
-
-    resize = () => this.setState({ width: document.getElementById('left').clientWidth });
-
-    componentDidMount() {
         window.addEventListener('resize', this.resize)
         this.resize()
     }
+
+    resize = () => this.setState({ width: document.getElementById('left').clientWidth });
 
     componentWillUnmount() {
         window.removeEventListener('resize', this.resize)

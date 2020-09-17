@@ -65,6 +65,7 @@ class WordManager extends React.Component {
             currentTranslation: currentEntry.tran,
             currentKotusType: currentEntry.kotus
         })
+        console.log(this.state.currentAnswer)
     }
 
     onCorrectAnswer = () => {

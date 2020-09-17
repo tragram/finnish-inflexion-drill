@@ -77,6 +77,7 @@ function generateVerbForm(d, i) {
     const imperativeOffset = 24;
     const potentialOffset = 33;
 
+    let ret;
     if (perfect) {
         let offset;
         let participleRet;
@@ -110,7 +111,7 @@ function generateVerbForm(d, i) {
             participleRet = passivePastParticiple;
         }
 
-        return negativeRet + ollaRet + participleRet;
+        ret = negativeRet + ollaRet + participleRet;
 
     }
     else {
@@ -118,107 +119,110 @@ function generateVerbForm(d, i) {
             if (active) {
                 if (positive) {
                     // present active positive
-                    return d[i];
+                    ret = d[i];
                 } else {
                     // present active negative
-                    return negative[i % 7] + d[6];
+                    ret = negative[i % 7] + d[6];
                 }
             } else {
                 if (positive) {
                     // present passive positive
-                    return d[7];
+                    ret = d[7];
                 } else {
                     // present passive negative
-                    return negative[6] + d[8];
+                    ret = negative[6] + d[8];
                 }
             }
         } else if (past) {
             if (active) {
                 if (positive) {
                     // past active positive
-                    return d[i - pastTenseIndexes[0] + pastOffset];
+                    ret = d[i - pastTenseIndexes[0] + pastOffset];
                 } else {
                     let participle;
                     // past active negative
                     if ((i - pastTenseIndexes[0]) % 7 < 3) {
                         participle = activePastParticiple;
                     } else { participle = activeParticiplePlural; }
-                    return negative[i - pastTenseIndexes[0] - 7] + participle;
+                    ret = negative[i - pastTenseIndexes[0] - 7] + participle;
                 }
             } else {
                 if (positive) {
                     // past passive positive
-                    return d[i - pastTenseIndexes[0] + pastOffset];
+                    ret = d[i - pastTenseIndexes[0] + pastOffset];
                 } else {
                     // past passive negative
-                    return negative[6] + passivePastParticiple;
+                    ret = negative[6] + passivePastParticiple;
                 }
             }
         } else if (conditional) {
             if (active) {
                 if (positive) {
                     // conditional active positive
-                    return d[i - conditionalIndexes[0] + conditionalOffset];
+                    ret = d[i - conditionalIndexes[0] + conditionalOffset];
                 } else {
                     // conditional active negative
-                    return negative[i - conditionalIndexes[0] - 7] + d[conditionalOffset + 2];
+                    ret = negative[i - conditionalIndexes[0] - 7] + d[conditionalOffset + 2];
                 }
             } else {
                 if (positive) {
                     // conditional passive positive
-                    return d[i - conditionalIndexes[0] + conditionalOffset];
+                    ret = d[i - conditionalIndexes[0] + conditionalOffset];
                 } else {
                     // conditional passive negative
-                    return negative[6] + d[i - conditionalIndexes[0] + conditionalOffset - 6];
+                    ret = negative[6] + d[i - conditionalIndexes[0] + conditionalOffset - 6];
                 }
             }
         } else if (imperative) {
             if (active) {
                 if (positive) {
                     // imperative active positive
-                    return d[i - imperativeIndexes[0] + imperativeOffset];
+                    ret = d[i - imperativeIndexes[0] + imperativeOffset];
                 } else {
                     // imperative active negative
                     if ((i - imperativeIndexes[0] - 6) === 0) {
                         // 2sg
-                        return imperativeNegative[i - imperativeIndexes[0] - 6] + d[i - imperativeIndexes[0]];
+                        ret = imperativeNegative[i - imperativeIndexes[0] - 6] + d[i - imperativeIndexes[0]];
                     } else {
                         // other
-                        return imperativeNegative[i - imperativeIndexes[0] - 6] + d[imperativeOffset + 6];
+                        ret = imperativeNegative[i - imperativeIndexes[0] - 6] + d[imperativeOffset + 6];
                     }
                 }
             } else {
                 if (positive) {
                     // imperative passive positive
-                    return d[imperativeOffset + 7];
+                    ret = d[imperativeOffset + 7];
                 } else {
                     // imperative passive negative
-                    return imperativeNegative[5] + d[imperativeOffset + 8];
+                    ret = imperativeNegative[5] + d[imperativeOffset + 8];
                 }
             }
         } else if (potential) {
             if (active) {
                 if (positive) {
                     // potential active positive
-                    return d[i - potentialIndexes[0] + potentialOffset];
+                    ret = d[i - potentialIndexes[0] + potentialOffset];
                 } else {
                     // potential active negative
-                    return negative[i - potentialIndexes[0] - 7] + d[potentialOffset + 6];
+                    ret = negative[i - potentialIndexes[0] - 7] + d[potentialOffset + 6];
                 }
             } else {
                 if (positive) {
                     // potential passive positive
-                    return d[potentialOffset + 7];
+                    ret = d[potentialOffset + 7];
                 } else {
                     // potential passive negative
-                    return negative[6] + d[potentialOffset + 8];
+                    ret = negative[6] + d[potentialOffset + 8];
                 }
             }
-        } else if (i === longFirstInfIndex || i === fifthInfIndex) {return d[i - infinitivesIndexes[0] + 42][0]; } else {
+        } else if (i === longFirstInfIndex || i === fifthInfIndex) { ret = d[i - infinitivesIndexes[0] + 42][0]; } else {
             //nominal forms are all written in the JSON
-            return d[i - infinitivesIndexes[0] + 42];
+            ret = d[i - infinitivesIndexes[0] + 42];
         }
     }
+    if (!Array.isArray(ret)) {
+        return [ret];
+    } else { return ret; }
 }
 
 function verbForms() {

@@ -11,7 +11,7 @@ function Info(props) {
                 </dl>
             </div>
             <div className="card settings">
-            <img src="https://uusikielemme.fi/wp-content/uploads/new-u.png" style={{ "width": "50px" }} /><br/>
+            <img src="https://uusikielemme.fi/wp-content/uploads/new-u.png" style={{ "width": "50px" }} alt=""/><br/>
                 <a href="https://uusikielemme.fi/finnish-grammar/" target="_blank" rel='noopener noreferrer' style={{font: "Comfortaa"}}>Learn more at Uusi kielemme
            (not affiliated in any way)</a>
             </div>
