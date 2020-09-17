@@ -255,6 +255,10 @@ code {
   z-index:1; */
 }
 
+.nav{
+    flex-direction: row;
+}
+
 ul#nav li {
     display: inline;
 }

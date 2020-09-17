@@ -22,12 +22,12 @@ const routing = (
         <div className="navbar-header">
           <a className="navbar-brand" href="#">Finnish Inflexion Drill</a>
         </div>
-        <ul className="nav navbar-nav mr-auto">
+        <ul className="nav navbar-nav mr-auto no-wrap">
           <li className="nav-item">
-            <Link activeClassName="active" className="nav-link" to={nounPath}>Nouns</Link>
+            <Link className="nav-link" to={nounPath}>Nouns</Link>
           </li>
           <li className="nav-item">
-            <Link activeClassName="active" className="nav-link" to={verbPath}>Verbs</Link>
+            <Link className="nav-link" to={verbPath}>Verbs</Link>
           </li>
         </ul>
       </nav>

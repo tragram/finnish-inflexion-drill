@@ -353,7 +353,7 @@ function VerbSettings(props) {
         <div onChange={(event) => props.changeRadio("passivitySettings", event.target.value)}>
             {passiveTexts.map((el, i) => (
                 <div>
-                    <input type="radio" value={el} id={el} name="passive" checked={props.passivityState === el} />
+                    <input type="radio" value={el} id={el} name="passive" defaultChecked={props.passivityState === el} />
                     <label htmlFor={el}>{passiveLabels[i]}</label><br />
                 </div>
             ))
@@ -367,7 +367,7 @@ function VerbSettings(props) {
         <div onChange={(event) => props.changeRadio("negativitySettings", event.target.value)}>
             {negativeTexts.map((el, i) => (
                 <div>
-                    <input type="radio" value={el} id={el} name="negative" checked={props.negativityState === el} />
+                    <input type="radio" value={el} id={el} name="negative" defaultChecked={props.negativityState === el} />
                     <label htmlFor={el}>{negativeLabels[i]}</label><br />
                 </div>
             ))
