@@ -81,7 +81,7 @@ class UserTextInput extends React.Component {
             this.setState({ value: newValue });
         } else if (event.key === '.') {
             this.setState({ value: this.props.currentAnswer[0] });
-        } else if (event.key === '/'||event.key === '-') {
+        } else if (event.key === '/' || event.key === '-') {
             this.props.onCorrectAnswer();
         }
     }
@@ -89,7 +89,9 @@ class UserTextInput extends React.Component {
         return (
             <div className="word-input-flex col-12">
                 <input type="text" className={"word-input " + this.state.textInputBG}
-                    placeholder={"type '" + this.props.currentWord + "' in the form specified"} onKeyPress={this.handleKeyPress}
+                    placeholder={"type '" + this.props.currentWord + "' in the form specified"}
+                    autocapitalize="off" autocomplete="off" spellcheck="false" autocorrect="off"
+                    onKeyPress={this.handleKeyPress}
                     onChange={(evt) => { this.setState({ value: evt.target.value.replace(/[^A-Za-zäöÄÖšž ]/g, "") }); }}
                     ref={this.props.reference} autoFocus value={this.state.value} />
             </div>
@@ -168,8 +170,8 @@ class RightCard extends React.Component {
 
         return (
             <div className={"container card word-card rcard " + this.props.cls}>
-                <div style={{height:"100px"}}>
-                        <img style={{ display: "inline-block", width: "100px", marginTop: "-92px" }} className="rcard-image" alt="" src={this.props.image} />
+                <div style={{ height: "100px" }}>
+                    <img style={{ display: "inline-block", width: "100px", marginTop: "-92px" }} className="rcard-image" alt="" src={this.props.image} />
                     <div style={{ display: "inline-block", width: this.state.width - 120 + "px" }}>
                         <p className="card-text rtext" style={style}>{this.props.text}</p>
                     </div>
