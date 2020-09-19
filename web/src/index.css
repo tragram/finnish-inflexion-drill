@@ -82,8 +82,6 @@ code {
     border-radius: 0 var(--border-rad) var(--border-rad) 0;
 }
 
-
-
 .lcard {
     font-size: 100px;
     font-weight: 700;
@@ -97,7 +95,6 @@ code {
     line-height: 320px;
     color: var(--finnish-blue);
 }
-
 
 .card-text {
     text-align: center;
@@ -203,12 +200,10 @@ code {
         height: 160px;
         border-radius: var(--border-rad);
     }
-
-    .rcard{
+    .rcard {
         border-radius: var(--border-rad);
     }
-    
-    .rcard-image{
+    .rcard-image {
         border-radius: var(--border-rad) 0 0 var(--border-rad);
     }
     .ltext {
@@ -236,12 +231,23 @@ code {
 }
 
 @media only screen and (max-width:1200px) {
-.no-l-padding{
-    padding-right:0;
+    .no-l-padding {
+        padding-right: 0;
+    }
+    .no-r-padding {
+        padding-left: 0;
+    }
 }
-.no-r-padding{
-    padding-left:0;
-}
+
+.about {
+    margin-top:30px;
+    max-width: 800px;
+    font-family: Roboto;
+    background: white;
+    color: var(--finnish-blue);
+    font-size: large;
+    padding: 30px;
+
 }
 
 /* span{overflow:hidden;} */
@@ -255,7 +261,7 @@ code {
   z-index:1; */
 }
 
-.nav{
+.nav {
     flex-direction: row;
 }
 
