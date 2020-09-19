@@ -8,7 +8,7 @@ const About = () => {
             </h2>
             <p>
                 This is a webpage I made because I felt like the possibilities to practice
-                Finnish online weren't satisfactory and that I shouldn't be THAT hard to help a bit.
+                Finnish online weren't satisfactory and that it shouldn't be THAT hard to help a bit.
                 </p><p>
                 Please do keep in mind that I'm neither a web-designer nor a web-developer -
                 in fact, this was the first web app in React that I made.
