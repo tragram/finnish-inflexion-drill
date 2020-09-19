@@ -6,7 +6,7 @@ function Info(props) {
                 <dl>
                     <li>press ',' to show the next letter</li>
                     <li>press '.' to show the answer</li>
-                    <li>press '/' or '-' to go generate a different word</li>
+                    <li>press '/' or '-' to generate a different word</li>
                     {/* <li>press ';' to generate a different form of the same word</li> - TODO?*/}
                 </dl>
             </div>
