@@ -12,6 +12,7 @@ The website is created in React and hosted [here](https://tragram.github.io/finn
 ## Features TO-DO
 * add adjective gradation (comparative and superlative)
 * disable auto-correct on mobile
+* make , . - / work on mobile
 * hide kotus and translation on mobile
 * checkbox to choose whether to use only kotus types or most common words 
     * slider to select how common word is to be generated, in case of common words
