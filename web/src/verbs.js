@@ -425,7 +425,7 @@ function VerbSettings(props) {
                         <br />
                         {negativeRadios}
                         <br />
-                        Choose verbs by group:
+                        Choose verbs by group endings:
                         {verbgroup_column}
                     </div>
                 </div>
