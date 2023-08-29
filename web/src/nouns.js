@@ -57,7 +57,8 @@ class Nouns extends React.Component {
         return (
             <div>
                 <WordManager top={topNouns} kotus={kotusNouns} forms={this.forms} generateForm={generateNounForm}
-                    currentData={this.state.currentData} formsOn={this.state.formsOn} mode={this.mode} />
+                    currentData={this.state.currentData} formsOn={this.state.formsOn} mode={this.mode} 
+                    enabledVerbgroups={Array(6).fill(true)} />
                 <NounSettings forms={this.forms} formsOn={this.state.formsOn} onClick={this.switchOnOff} />
             </div>
         )

@@ -14,6 +14,8 @@ const infinitives = [[["1st"], ["long"]], [["2nd"], ["inessive (-ssA)"]], [["2nd
 
 const participles = ["present active", "present passive", "past active", "past passive", "agent", "negative"]
 
+const verbGroups = ["I (-VV)", "II (-da/dä)", "III (-CCV)", "IV (-Vta/Vtä)", "V (-ita/itä)", "VI (-eta/etä)"]
+
 // indexes are related to website's inner representation, while offsets (declared later) are related to the JSON data structure
 let range = (start, end) => [...Array(end).keys()].slice(start);
 let theNextN = (array, n) => range(array[array.length - 1] + 1, array[array.length - 1] + n + 1);
@@ -256,9 +258,11 @@ class Verbs extends React.Component {
         this.tenses = JSON.parse(localStorage.getItem("tenseSettings")) || Array(tensesToIndexes.length).fill(1);
         this.passivity = JSON.parse(localStorage.getItem("passivitySettings")) || "both";
         this.negativity = JSON.parse(localStorage.getItem("negativitySettings")) || "both";
+        this.verbgroups = JSON.parse(localStorage.getItem("verbgroupsSettings")) || Array(6).fill(true);
         this.state = {
             formsOn: this.computeFormsOn(this.tenses, this.passivity, this.negativity),
             currentData: JSON.parse(localStorage.getItem(this.dataSettingsName)) || "top",
+            verbgroupsOn: this.verbgroups,
         };
     }
 
@@ -306,6 +310,30 @@ class Verbs extends React.Component {
         })
     }
 
+    changeVerbgroup = (index, value) => {
+        let newVerbgroups = this.verbgroups.slice();
+        newVerbgroups[index] = value;
+
+        if (value !== true) {
+            let noneSelected = true;
+            for(let i = 0; i < newVerbgroups.length; i++) {
+                if (newVerbgroups[i] !== false) {
+                    noneSelected = false;
+                    break;
+                }
+            }
+            if (noneSelected) {
+                alert('At least one verb group has to be selected!');
+                return;
+            }
+        }
+        
+        this.verbgroups = newVerbgroups;
+        this.setState({
+            verbgroupsOn: this.verbgroups
+        })
+    }
+
     render() {
         // console.log(topVerbs["kuulua"]["forms"])
         // let text = []
@@ -317,9 +345,11 @@ class Verbs extends React.Component {
         return (
             <div>
                 <WordManager top={topVerbs} kotus={kotusVerbs} forms={this.forms} generateForm={generateVerbForm}
-                    currentData={this.state.currentData} formsOn={this.state.formsOn} mode={this.mode} />
+                    currentData={this.state.currentData} formsOn={this.state.formsOn} mode={this.mode} 
+                    enabledVerbgroups={this.state.verbgroupsOn}/>
                 <VerbSettings onClick={this.switchTense} changeRadio={this.changeRadio} forms={this.forms}
-                    checkboxStates={this.tenses} passivityState={this.passivity} negativityState={this.negativity} />
+                    checkboxStates={this.tenses} passivityState={this.passivity} negativityState={this.negativity} 
+                    onVerbgroupChange={this.changeVerbgroup} verbgroupCheckboxStates={this.verbgroups} />
             </div>
         )
     }
@@ -375,6 +405,15 @@ function VerbSettings(props) {
         </div>
     );
 
+    let verbgroup_boxes = [...verbGroups];
+    let verbgroup_box_ids = verbgroup_boxes.map(el => el.replace(" ", "-"));
+
+    let verbgroup_column = [];
+    for (let i = 0; i < verbgroup_boxes.length; ++i) {
+        verbgroup_column.push(<div><input type="checkbox" id={verbgroup_box_ids[i]} key={verbgroup_boxes[i]} checked={props.verbgroupCheckboxStates[i]}
+            onChange={() => props.onVerbgroupChange(i, !props.verbgroupCheckboxStates[i])} /> <label htmlFor={verbgroup_box_ids[i]}>{verbgroup_boxes[i]}</label></div>, <br />);
+    }
+
     return (
         <div className="container">
             <div className="row card-flex align-items-start">
@@ -385,6 +424,9 @@ function VerbSettings(props) {
                         {passiveRadios}
                         <br />
                         {negativeRadios}
+                        <br />
+                        Choose verbs by group endings:
+                        {verbgroup_column}
                     </div>
                 </div>
 
