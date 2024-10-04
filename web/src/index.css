@@ -70,7 +70,15 @@ code {
     min-width: 100px;
     word-break: break-all;
     white-space: normal;
+    position: relative;
+    display: flex;
+    flex-direction: row;
 }
+
+.word-card p {
+  flex-grow: 1;
+}
+
 
 .rcard {
     /* font-size: 1.5em; */
@@ -212,12 +220,20 @@ code {
 }
 
 @media only screen and (max-height: 720px) and (max-width:1200px) {
-    .word-card.blue {
-        display: none;
-    }
-    .word-card.yellow {
-        display: none;
-    }
+
+  .word-card {
+    height: 60px;
+    line-height: 60px;
+  }
+
+  .word-card p {
+    line-height: 60px;
+  }
+
+  .rcard-image {
+    width: 60px;
+  }
+
 }
 
 .no-l-padding {
@@ -300,3 +316,6 @@ ul#nav li {
 .center-div{
   width: 1010px;
 } */
+
+
+
