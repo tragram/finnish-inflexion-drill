@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.css": "/finnish-inflexion-drill/static/css/main.bf59834f.chunk.css",
-    "main.js": "/finnish-inflexion-drill/static/js/main.8cc62718.chunk.js",
-    "main.js.map": "/finnish-inflexion-drill/static/js/main.8cc62718.chunk.js.map",
-    "runtime-main.js": "/finnish-inflexion-drill/static/js/runtime-main.f630f979.js",
-    "runtime-main.js.map": "/finnish-inflexion-drill/static/js/runtime-main.f630f979.js.map",
-    "static/js/2.8b1b521d.chunk.js": "/finnish-inflexion-drill/static/js/2.8b1b521d.chunk.js",
-    "static/js/2.8b1b521d.chunk.js.map": "/finnish-inflexion-drill/static/js/2.8b1b521d.chunk.js.map",
+    "main.css": "/finnish-inflexion-drill/static/css/main.60306cd1.chunk.css",
+    "main.js": "/finnish-inflexion-drill/static/js/main.a0a56f51.chunk.js",
+    "main.js.map": "/finnish-inflexion-drill/static/js/main.a0a56f51.chunk.js.map",
+    "runtime-main.js": "/finnish-inflexion-drill/static/js/runtime-main.fec1a411.js",
+    "runtime-main.js.map": "/finnish-inflexion-drill/static/js/runtime-main.fec1a411.js.map",
+    "static/js/2.3faf3c46.chunk.js": "/finnish-inflexion-drill/static/js/2.3faf3c46.chunk.js",
+    "static/js/2.3faf3c46.chunk.js.map": "/finnish-inflexion-drill/static/js/2.3faf3c46.chunk.js.map",
     "index.html": "/finnish-inflexion-drill/index.html",
-    "precache-manifest.56ab3cbbec36786d18f0450d9a10c13a.js": "/finnish-inflexion-drill/precache-manifest.56ab3cbbec36786d18f0450d9a10c13a.js",
+    "precache-manifest.ef048f61bb9b59abe50fc91bada4d79f.js": "/finnish-inflexion-drill/precache-manifest.ef048f61bb9b59abe50fc91bada4d79f.js",
     "service-worker.js": "/finnish-inflexion-drill/service-worker.js",
-    "static/css/main.bf59834f.chunk.css.map": "/finnish-inflexion-drill/static/css/main.bf59834f.chunk.css.map",
-    "static/js/2.8b1b521d.chunk.js.LICENSE.txt": "/finnish-inflexion-drill/static/js/2.8b1b521d.chunk.js.LICENSE.txt"
+    "static/css/main.60306cd1.chunk.css.map": "/finnish-inflexion-drill/static/css/main.60306cd1.chunk.css.map",
+    "static/js/2.3faf3c46.chunk.js.LICENSE.txt": "/finnish-inflexion-drill/static/js/2.3faf3c46.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.f630f979.js",
-    "static/js/2.8b1b521d.chunk.js",
-    "static/css/main.bf59834f.chunk.css",
-    "static/js/main.8cc62718.chunk.js"
+    "static/js/runtime-main.fec1a411.js",
+    "static/js/2.3faf3c46.chunk.js",
+    "static/css/main.60306cd1.chunk.css",
+    "static/js/main.a0a56f51.chunk.js"
   ]
 }
