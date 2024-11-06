@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import WordManager from './word_manager'
 import kotusVerbs from './kotus_verbs.json';
 import topVerbs from './top_verbs.json'
@@ -356,18 +356,14 @@ class Verbs extends React.Component {
 }
 
 function VerbSettings(props) {
-    const [checkboxStates, setCheckboxStates] = useState(null);
-
     // Function to set all checkbox states
     const setAllCheckboxes = (v) => {
         // Toggle all but the first checkbox
         for (let i = 1; i < props.checkboxStates.length; ++i) {
-            props.checkboxStates[i] = v;
+            props.onClick(i, v);
         }
         // Set first checkbox to true (at least one must always be selected)
-        props.checkboxStates[0] = true;
-
-        setCheckboxStates([...props.checkboxStates]);
+        props.onClick(0, true)
     };
 
     let checkboxes = [...tensesMoods, "1st long infinitive", "2nd infinitive", "3rd infinitive",
