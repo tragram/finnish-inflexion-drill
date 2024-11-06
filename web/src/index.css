@@ -49,6 +49,10 @@ code {
     /* background:var(--finnish-blue); */
 }
 
+.btn-group {
+    display: flex;
+}
+
 .l-stretch {
     flex: 2 2 200px;
     max-width: 600px;
@@ -316,6 +320,3 @@ ul#nav li {
 .center-div{
   width: 1010px;
 } */
-
-
-
