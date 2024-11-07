@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import WordManager from './word_manager'
 import kotusVerbs from './kotus_verbs.json';
 import topVerbs from './top_verbs.json'
@@ -356,12 +356,27 @@ class Verbs extends React.Component {
 }
 
 function VerbSettings(props) {
+    // Function to set all checkbox states
+    const setAllCheckboxes = (v) => {
+        // Toggle all but the first checkbox
+        for (let i = 1; i < props.checkboxStates.length; ++i) {
+            props.onClick(i, v);
+        }
+        // Set first checkbox to true (at least one must always be selected)
+        props.onClick(0, true)
+    };
+
     let checkboxes = [...tensesMoods, "1st long infinitive", "2nd infinitive", "3rd infinitive",
         "4th infinitive", "5th infinitive", "participles"];
     // console.log(checkboxes)
     let checkboxIds = checkboxes.map(el => el.replace(" ", "-"));
 
     let tensesColumn = [];
+    tensesColumn.push(<div class="btn-group">
+        <div><button onClick={() => setAllCheckboxes(true)}>Select all</button></div>
+        <div><button onClick={() => setAllCheckboxes(false)}>Select one</button></div>
+    </div>
+    );
     for (let i = 0; i < checkboxes.length; ++i) {
         tensesColumn.push(<div><input type="checkbox" id={checkboxIds[i]} key={checkboxes[i]} checked={props.checkboxStates[i]}
             onChange={() => props.onClick(i, !props.checkboxStates[i])} /> <label htmlFor={checkboxIds[i]}>{checkboxes[i]}</label></div>, <br />);
@@ -419,13 +434,13 @@ function VerbSettings(props) {
             <div className="row card-flex align-items-start">
                 <div className="col-lg-6 no-l-padding">
                     <div className="card settings">
+                        <h5 class="pt-1">Tenses</h5>
                         {tensesColumn}
-                        <br />
+                        <h5 class="pt-1">Active/Passive</h5>
                         {passiveRadios}
-                        <br />
+                        <h5 class="pt-1">Positive/Negative</h5>
                         {negativeRadios}
-                        <br />
-                        Choose verbs by group endings:
+                        <h5 class="pt-1">Choose verbs by group endings:</h5>
                         {verbgroup_column}
                     </div>
                 </div>
