@@ -320,3 +320,49 @@ ul#nav li {
 .center-div{
   width: 1010px;
 } */
+
+.button-group {
+  display: flex;
+  flex-wrap: wrap; 
+  gap: 6px;
+  margin-top: 15px;
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .button-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+  }
+}
+
+.button-group button {
+  padding: 6px 12px;  
+  border: none;
+  border-radius: var(--border-rad);
+  font-family: 'Comfortaa', sans-serif;
+  font-size: 0.9rem; 
+  color: white;
+  flex: 1 1 auto;    
+  min-width: 80px;  
+  cursor: pointer
+}
+
+.button-group button:nth-child(1) {
+  background: var(--finnish-blue);
+}
+
+.button-group button:nth-child(2) {
+  background: var(--finnish-red);
+}
+
+.button-group button:nth-child(3) {
+  background: var(--finnish-yellow);
+  color: var(--finnish-blue);
+}
+
+.button-group button:nth-child(4) {
+  background: #444;
+}

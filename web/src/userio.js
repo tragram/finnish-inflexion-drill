@@ -57,6 +57,40 @@ class UserTextInput extends React.Component {
             });
     }
 
+    checkAnswer = () => {
+        if (this.props.currentAnswer.includes(this.state.value.toLowerCase())) {
+            this.props.onCorrectAnswer();
+            this.flicker("green-bg");
+            this.setState({ value: "" });
+        } else {
+            this.flicker("red-bg");
+        }
+    }
+
+    revealNextLetter = () => {
+        let newValue = "";
+        for (let i = 0; i <= Math.min(this.state.value.length, this.props.currentAnswer[0].length); ++i) {
+            if (i === this.props.currentAnswer[0].length) {
+                newValue = this.props.currentAnswer[0];
+                break;
+            }
+            else if (this.state.value.length < i || this.state.value[i] !== this.props.currentAnswer[0][i]) {
+                newValue = this.props.currentAnswer[0].slice(0, i + 1);
+                break;
+            }
+        }
+        this.setState({ value: newValue });
+    }
+
+    revealFullAnswer = () => {
+        this.setState({ value: this.props.currentAnswer[0] });
+    }
+
+    newWord = () => {
+        this.props.onCorrectAnswer();
+        this.setState({ value: "" });   
+    }
+
     handleKeyPress = (event) => {
         if (event.key === 'Enter') {
             if (this.props.currentAnswer.includes(this.state.value.toLowerCase())) {
@@ -94,7 +128,17 @@ class UserTextInput extends React.Component {
                     onKeyPress={this.handleKeyPress}
                     onChange={(evt) => { this.setState({ value: evt.target.value.replace(/[^A-Za-zäöÄÖšž ]/g, "") }); }}
                     ref={this.props.reference} autoFocus value={this.state.value} />
+
+                <div className="button-group">
+                    <button onClick={this.checkAnswer}>Check</button>
+                    <button onClick={this.revealNextLetter}>Hint (next letter)</button>
+                    <button onClick={this.revealFullAnswer}>Show full</button>
+                    <button onClick={this.newWord}>New word</button>
+                </div>
+                
             </div>
+
+            
         )
     }
 }
